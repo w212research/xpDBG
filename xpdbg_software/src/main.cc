@@ -1,5 +1,5 @@
 #include <capstone/capstone.h>
-#include <gtk/gtk.h>
+#include <gtkmm.h>
 #include <cstdio>
 
 uint8_t test_arm_thumb_code[] = {
@@ -10,28 +10,17 @@ uint8_t test_arm_thumb_code[] = {
 	0x01,0x44,						//	add		r1,	r1,	r0
 };
 
-void activate(GtkApplication   *app,
-			  gpointer			user_data) {
-	GtkTextBuffer  *buffer;
-	GtkWidget	   *window;
-	GtkWidget	   *view;
+class xpDBG_window : public Gtk::Window {
+public:
+	xpDBG_window();
+	virtual ~xpDBG_window();
+};
+
+xpDBG_window::xpDBG_window(void) {
 	cs_insn		   *insn;
 	size_t			count;
 	csh				handle;
 	int				i;
-
-	window = gtk_application_window_new(app);
-	gtk_window_set_title(GTK_WINDOW(window),
-						 "Disassembly");
-	gtk_window_set_default_size(GTK_WINDOW(window),
-								200,
-								200);
-	view = gtk_text_view_new();
-	gtk_text_view_set_editable(GTK_TEXT_VIEW(view),
-							   FALSE);
-	gtk_text_view_set_cursor_visible(GTK_TEXT_VIEW(view),
-									 TRUE);
-
 
 	/*
 	 *  open capstone handle
@@ -77,31 +66,30 @@ void activate(GtkApplication   *app,
 	 */
 	cs_close(&handle);
 
-	buffer = gtk_text_view_get_buffer(GTK_TEXT_VIEW(view));
-	gtk_text_buffer_set_text(buffer,
-							 disassembly_text,
-							 strlen(disassembly_text));
+	set_title("Disassembly");
+	set_default_size(200,
+					 200);
 
-	gtk_container_add(GTK_CONTAINER(window),
-					  GTK_WIDGET(view));
+	Gtk::TextView				   *our_text_view	=	new	Gtk::TextView();
+	Glib::RefPtr<Gtk::TextBuffer>	our_text_buffer	=	Gtk::TextBuffer::create();
+	our_text_buffer->set_text(disassembly_text);
+	our_text_view->set_buffer(our_text_buffer);
 
-	gtk_widget_show_all(GTK_WIDGET(window));
+	add(*our_text_view);
+
+	show_all_children();
+}
+
+xpDBG_window::~xpDBG_window(void) {
+	//
 }
 
 int main(int	argc,
 		 char  *argv[]) {
-	GtkApplication *app;
+	auto			app		=	Gtk::Application::create(argc,
+														 argv,
+														 "org.xpdbg.xpdbg");
+	xpDBG_window	window;
 
-	app = gtk_application_new("org.xpdbg.xpdbg",
-						G_APPLICATION_FLAGS_NONE);
-	g_signal_connect(app,
-					 "activate",
-				 	 G_CALLBACK(activate),
-				 	 NULL);
-	g_application_run(G_APPLICATION(app),
-					  argc,
-				  	  argv);
-	g_object_unref(app);
-
-	return 0;
+	return app->run(window);
 }
