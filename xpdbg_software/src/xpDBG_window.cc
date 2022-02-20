@@ -32,6 +32,11 @@ xpDBG_window::xpDBG_window(int		argc,
 	int result = dialog.run();
 	switch (result) {
 		case (Gtk::RESPONSE_OK): {
+			/*
+			 *  strdup because otherwise it breaks or something
+			 *  god, i love memory management
+			 */
+
 			printf("Opening...\n");
 			filename = strdup(dialog.get_filename().c_str());
 			printf("Filename: %s\n", filename);
