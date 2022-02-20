@@ -23,6 +23,8 @@ xpDBG_window::xpDBG_window(void) {
 	Gtk::TextView				   *our_text_view	=	new	Gtk::TextView();
 	Glib::RefPtr<Gtk::TextBuffer>	our_text_buffer	=	Gtk::TextBuffer::create();
 
+	our_text_view->set_monospace(true);
+	our_text_view->set_editable(false);
 	our_text_view->set_buffer(our_text_buffer);
 
 	/*
