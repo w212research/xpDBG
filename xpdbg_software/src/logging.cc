@@ -7,10 +7,10 @@
 using namespace std;
 
 static log_level_t	current_log_level;
-char 				log_char[] = "cfewivd";
+char 				log_char[] = "vcewi";
 
 log_status_t xpdbg_log(log_level_t log_level, char* fmt, ...) {
-	if (log_level > current_log_level) {
+	if (log_level < current_log_level) {
 		return LOG_UNIMPORTANT;
 	} else {
 		va_list		args;
@@ -47,7 +47,7 @@ log_status_t xpdbg_log(log_level_t log_level, char* fmt, ...) {
 	__builtin_unreachable();
 }
 
-log_status_t set_log_level(log_level_t log_level) {
+log_status_t xpdbg_set_log_level(log_level_t log_level) {
 	current_log_level = log_level;
 	return LOG_SUCCESS;
 }
