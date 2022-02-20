@@ -55,7 +55,7 @@ xpDBG_window::xpDBG_window(void) {
 		}
 
 		/*
-		 * no memory leaks here, sir
+		 *  no memory leaks here, sir
 		 */
 		cs_free(insn,
 				count);
