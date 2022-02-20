@@ -25,7 +25,7 @@ xpDBG_window::xpDBG_window(int		argc,
 
 	xpdbg_log(LOG_INFO, "Landed in xpDBG_window.");
 	xpdbg_log(LOG_INFO, "Asking for file for disassembly...");
-	Gtk::FileChooserDialog dialog("Please choose a file",
+	Gtk::FileChooserDialog dialog("Please choose a file for disassembly.",
 								  Gtk::FILE_CHOOSER_ACTION_OPEN);
 	dialog.set_transient_for(*this);
 
