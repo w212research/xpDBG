@@ -1,0 +1,9 @@
+[submodule "xpdbg_software/submodules/capstone"]
+	path = xpdbg_software/submodules/capstone
+	url = https://github.com/capstone-engine/capstone.git
+[submodule "xpdbg_software/submodules/keystone"]
+	path = xpdbg_software/submodules/keystone
+	url = https://github.com/keystone-engine/keystone.git
+[submodule "xpdbg_software/submodules/unicorn"]
+	path = xpdbg_software/submodules/unicorn
+	url = https://github.com/unicorn-engine/unicorn.git
