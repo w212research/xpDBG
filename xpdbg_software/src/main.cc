@@ -53,7 +53,7 @@ void activate(GtkApplication   *app,
 	char   *disassembly_text	= (char*)"";
 
 	/*
-	 *  print it
+	 *  format it
 	 */
 	if (count > 0) {
 		for (i = 0; i < count; i++) {
@@ -81,7 +81,7 @@ void activate(GtkApplication   *app,
 	gtk_text_buffer_set_text(buffer,
 							 disassembly_text,
 							 strlen(disassembly_text));
-	
+
 	gtk_container_add(GTK_CONTAINER(window),
 					  GTK_WIDGET(view));
 
