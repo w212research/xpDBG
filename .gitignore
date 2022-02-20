@@ -1,0 +1,16 @@
+# just do everything, better safe than sorry
+xpdbg_software/bin
+xpdbg_software/bin/*
+xpdbg_software/bin/**
+xpdbg_software/bin/**/*
+
+# .DS_Store files make me want to not be alive
+.DS_Store
+*/.DS_Store
+**/.DS_Store
+
+# nano damn you
+*.swp
+
+# fuck macOS for this shit
+._*
