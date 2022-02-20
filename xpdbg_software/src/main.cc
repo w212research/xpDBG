@@ -12,6 +12,7 @@ uint8_t test_arm_thumb_code[] = {
 
 void activate(GtkApplication   *app,
 			  gpointer			user_data) {
+	GtkTextBuffer  *buffer;
 	GtkWidget	   *window;
 	GtkWidget	   *view;
 	cs_insn		   *insn;
@@ -76,7 +77,6 @@ void activate(GtkApplication   *app,
 	 */
 	cs_close(&handle);
 
-	GtkTextBuffer  *buffer;
 	buffer = gtk_text_view_get_buffer(GTK_TEXT_VIEW(view));
 	gtk_text_buffer_set_text(buffer,
 							 disassembly_text,
