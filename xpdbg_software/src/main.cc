@@ -1,4 +1,5 @@
 #include <capstone/capstone.h>
+#include <gtk/gtk.h>
 #include <cstdio>
 
 uint8_t test_arm_thumb_code[] = {
@@ -9,12 +10,27 @@ uint8_t test_arm_thumb_code[] = {
 	0x01,0x44,						//	add		r1,	r1,	r0
 };
 
-int main(int argc,
-		 char* argv[]) {
-	cs_insn	   *insn;
-	size_t		count;
-	csh			handle;
-	int			i;
+void activate(GtkApplication   *app,
+			  gpointer			user_data) {
+	GtkWidget	   *window;
+	GtkWidget	   *view;
+	cs_insn		   *insn;
+	size_t			count;
+	csh				handle;
+	int				i;
+
+	window = gtk_application_window_new(app);
+	gtk_window_set_title(GTK_WINDOW(window),
+						 "Disassembly");
+	gtk_window_set_default_size(GTK_WINDOW(window),
+								200,
+								200);
+	view = gtk_text_view_new();
+	gtk_text_view_set_editable(GTK_TEXT_VIEW(view),
+							   FALSE);
+	gtk_text_view_set_cursor_visible(GTK_TEXT_VIEW(view),
+									 TRUE);
+
 
 	/*
 	 *  open capstone handle
@@ -34,15 +50,18 @@ int main(int argc,
 					  0,
 					  &insn);
 
+	char   *disassembly_text	= (char*)"";
+
 	/*
 	 *  print it
 	 */
 	if (count > 0) {
 		for (i = 0; i < count; i++) {
-			printf("0x%016lx:\t%s\t\t%s\n",
-				   insn[i].address,
-				   insn[i].mnemonic,
-				   insn[i].op_str);
+			asprintf(&disassembly_text, "%s0x%016lx:\t%s\t\t%s\n",
+					 disassembly_text,
+					 insn[i].address,
+					 insn[i].mnemonic,
+					 insn[i].op_str);
 		}
 
 		/*
@@ -56,6 +75,31 @@ int main(int argc,
 	 *  good little programmers, we are
 	 */
 	cs_close(&handle);
+
+	GtkTextBuffer  *buffer;
+	buffer = gtk_text_view_get_buffer(GTK_TEXT_VIEW(view));
+	gtk_text_buffer_set_text(buffer,
+							 disassembly_text,
+							 strlen(disassembly_text));
+	gtk_container_add(GTK_CONTAINER(window),
+					  GTK_WIDGET(view));
+	gtk_widget_show_all(GTK_WIDGET(window));
+}
+
+int main(int	argc,
+		 char  *argv[]) {
+	GtkApplication *app;
+
+	app = gtk_application_new("org.xpdbg.xpdbg",
+						G_APPLICATION_FLAGS_NONE);
+	g_signal_connect(app,
+					 "activate",
+				 	 G_CALLBACK(activate),
+				 	 NULL);
+	g_application_run(G_APPLICATION(app),
+					  argc,
+				  	  argv);
+	g_object_unref(app);
 
 	return 0;
 }
