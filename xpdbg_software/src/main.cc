@@ -22,6 +22,15 @@ xpDBG_window::xpDBG_window(void) {
 	csh				handle;
 	int				i;
 
+	set_title("Disassembly");
+	set_default_size(200,
+					 200);
+
+	Gtk::TextView				   *our_text_view	=	new	Gtk::TextView();
+	Glib::RefPtr<Gtk::TextBuffer>	our_text_buffer	=	Gtk::TextBuffer::create();
+	
+	our_text_view->set_buffer(our_text_buffer);
+
 	/*
 	 *  open capstone handle
 	 *  CS_MODE_THUMB as this is thumb code
@@ -66,14 +75,7 @@ xpDBG_window::xpDBG_window(void) {
 	 */
 	cs_close(&handle);
 
-	set_title("Disassembly");
-	set_default_size(200,
-					 200);
-
-	Gtk::TextView				   *our_text_view	=	new	Gtk::TextView();
-	Glib::RefPtr<Gtk::TextBuffer>	our_text_buffer	=	Gtk::TextBuffer::create();
 	our_text_buffer->set_text(disassembly_text);
-	our_text_view->set_buffer(our_text_buffer);
 
 	add(*our_text_view);
 
