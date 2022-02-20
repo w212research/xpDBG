@@ -11,31 +11,10 @@ uint8_t test_arm_thumb_code[] = {
 	0x01,0x44,						//	add		r1,	r1,	r0
 };
 
-int main(int	argc,
-		 char  *argv[]) {
-	printf("Unicorn Testing...\n");
-	uc_engine  *uc;
-	uc_err		err;
-
-	err = uc_open(UC_ARCH_ARM,
-				  UC_MODE_THUMB,
-				  &uc);
-    if (err) {
-        printf("Failed on uc_open() with error returned: %u (%s)\n",
-			   err,
-               uc_strerror(err));
-        return -1;
-    }
-
-	uc_mem_map(uc, BASE_ADDY, 0x100000, UC_PROT_ALL);
-	uc_mem_write(uc, BASE_ADDY, test_arm_thumb_code, sizeof(test_arm_thumb_code));
-
-	err = uc_emu_start(uc, BASE_ADDY | 1, BASE_ADDY + sizeof(test_arm_thumb_code), 0, 0);
-	if (err) {
-		printf("Failed on uc_emu_start() with error returned: %u\n",
-			   err);
-	}
-
+void hook_code(uc_engine   *uc,
+			   uint64_t		address,
+			   uint32_t		size,
+			   void		   *user_data) {
 	uint32_t regs[16];
 
 	int i = 0;
@@ -75,6 +54,36 @@ int main(int	argc,
 	printf("0x%08x\n", regs[i++]);
 	printf("0x%08x\n", regs[i++]);
 	printf("0x%08x\n", regs[i++]);
+	getchar();
+}
+
+int main(int	argc,
+		 char  *argv[]) {
+	printf("Unicorn Testing...\n");
+	uc_engine  *uc;
+	uc_hook		hook1;
+	uc_err		err;
+
+	err = uc_open(UC_ARCH_ARM,
+				  UC_MODE_THUMB,
+				  &uc);
+    if (err) {
+        printf("Failed on uc_open() with error returned: %u (%s)\n",
+			   err,
+               uc_strerror(err));
+        return -1;
+    }
+
+	uc_mem_map(uc, BASE_ADDY, 0x100000, UC_PROT_ALL);
+	uc_mem_write(uc, BASE_ADDY, test_arm_thumb_code, sizeof(test_arm_thumb_code));
+
+	uc_hook_add(uc, &hook1, UC_HOOK_CODE, (void*)hook_code, NULL, BASE_ADDY, BASE_ADDY + sizeof(test_arm_thumb_code));
+
+	err = uc_emu_start(uc, BASE_ADDY | 1, BASE_ADDY + sizeof(test_arm_thumb_code), 0, 0);
+	if (err) {
+		printf("Failed on uc_emu_start() with error returned: %u\n",
+			   err);
+	}
 
     uc_close(uc);
 
