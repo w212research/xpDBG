@@ -6,7 +6,7 @@
 class xpDBG_window : public Gtk::Window {
 public:
 	xpDBG_window(int		argc,
-				 char	   *argv[]); 
+				 char	   *argv[]);
 	virtual ~xpDBG_window();
 };
 
