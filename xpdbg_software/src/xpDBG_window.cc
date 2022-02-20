@@ -10,8 +10,10 @@ uint8_t test_arm_thumb_code[] = {
 	0x01,0x44,						//	add		r1,	r1,	r0
 };
 
-xpDBG_window::xpDBG_window(void) {
+xpDBG_window::xpDBG_window(int		argc,
+						   char	   *argv[]) {
 	cs_insn		   *insn;
+	uint8_t		   *buf;
 	size_t			count;
 	csh				handle;
 	int				i;
@@ -26,6 +28,22 @@ xpDBG_window::xpDBG_window(void) {
 	our_text_view->set_monospace(true);
 	our_text_view->set_editable(false);
 	our_text_view->set_buffer(our_text_buffer);
+	size_t	len	=	0;
+
+	if (argc < 2) {
+		buf = test_arm_thumb_code;
+		len = sizeof(test_arm_thumb_code);
+	} else {
+		FILE*	fp	=	fopen(argv[1], "rb");
+
+		fseek(fp, 0, SEEK_END);
+		len	=	ftell(fp);
+		rewind(fp);
+
+		buf	=	(uint8_t*)calloc(len, len / sizeof(uint8_t));
+		fread(buf, sizeof(uint8_t), len / sizeof(uint8_t), fp);
+		fclose(fp);
+	}
 
 	/*
 	 *  open capstone handle
@@ -39,8 +57,8 @@ xpDBG_window::xpDBG_window(void) {
 	 *  disassemble it
 	 */
 	count = cs_disasm(handle,
-					  test_arm_thumb_code,
-					  sizeof(test_arm_thumb_code),
+					  buf,
+					  len,
 					  0x1000,
 					  0,
 					  &insn);
