@@ -50,6 +50,7 @@ xpDBG_window::xpDBG_window(int		argc,
 			break;
 		} default: {
 			xpdbg_log(LOG_ERROR, "Something went wrong.");
+			return;
 			break;
 		}
 	}
