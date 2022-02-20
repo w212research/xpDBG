@@ -1,7 +1,7 @@
 #!/bin/bash
 
-CC=gcc
+CPP=g++
 
 rm -rf bin
 mkdir bin
-$CC src/main.c -o bin/main
+$CPP src/main.cc -o bin/main
