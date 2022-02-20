@@ -1,4 +1,5 @@
 #include "xpDBG_window.h"
+#include "logging.h"
 #include <gtkmm.h>
 #include <cstdio>
 
@@ -26,6 +27,10 @@ int main(int	argc,
 	fake_argv[0] = argv[0];
 	fake_argv[1] = NULL;
 
+	xpdbg_set_log_level(LOG_VERBOSE);
+	xpdbg_log(LOG_INFO, "xpDBG Loaded.");
+
+	xpdbg_log(LOG_INFO, "Creating GTK application...");
 	/*
 	 *  create the app
 	 */
@@ -33,12 +38,15 @@ int main(int	argc,
 										fake_argv,
 										"org.xpdbg.xpdbg");
 
+	xpdbg_log(LOG_INFO, "Creating xpDBG_window...");
 	/*
 	 *  create the window object
 	 */
 	xpDBG_window window(argc,
 						argv);
 
+
+	xpdbg_log(LOG_INFO, "Running xpDBG_window...");
 	/*
 	 *  run it
 	 */
