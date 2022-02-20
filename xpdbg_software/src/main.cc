@@ -81,7 +81,9 @@ xpDBG_window::xpDBG_window(void) {
 }
 
 xpDBG_window::~xpDBG_window(void) {
-	//
+	/*
+	 *  empty function
+	 */
 }
 
 int main(int	argc,
