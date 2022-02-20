@@ -4,4 +4,4 @@ CPP=g++
 
 rm -rf bin
 mkdir bin
-$CPP src/main.cc -o bin/main
+$CPP src/main.cc -lcapstone -o bin/main
