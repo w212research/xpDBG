@@ -1,0 +1,27 @@
+                _ _
+__  ___ __   __| | |__   __ _
+\ \/ / '_ \ / _` | '_ \ / _` |
+ >  <| |_) | (_| | |_) | (_| |
+/_/\_\ .__/ \__,_|_.__/ \__, |
+     |_|                |___/
+
+What is xpdbg?
+xpdbg is a project to create a cross platform debugger, code editor, and general
+development environment, targeting lower level development.
+
+Planned features include:
+	- support for multiple architectures
+	- assembly editing
+	- C/C++ editing
+	- assembling, and compilation support for a large number of architectures
+	- a debugger, with the ability to step forward and backward through
+	  instructions, view and modify registers, edit memory, scripting support,
+	  an API for writing things such as syscall handlers, and more.
+	- both a GUI and TUI interface, as well as a scripting platform & network
+	  support, think of something like LLDB and its ability to debug over a
+	  network.
+	- binary loading
+	- multiple executable formats supported, Mach-O, ELF, PE, etc
+	- a disassembler to aid in reverse engineering
+	- possibly decompiler support (Ghidra?)
+	- and more!
