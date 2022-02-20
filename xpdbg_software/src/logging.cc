@@ -9,7 +9,7 @@ using namespace std;
 static log_level_t	current_log_level;
 char 				log_char[] = "vcewi";
 
-log_status_t xpdbg_log(log_level_t log_level, char* fmt, ...) {
+log_status_t xpdbg_log(log_level_t log_level, const char* fmt, ...) {
 	if (log_level < current_log_level) {
 		return LOG_UNIMPORTANT;
 	} else {
