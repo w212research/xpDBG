@@ -81,8 +81,10 @@ void activate(GtkApplication   *app,
 	gtk_text_buffer_set_text(buffer,
 							 disassembly_text,
 							 strlen(disassembly_text));
+	
 	gtk_container_add(GTK_CONTAINER(window),
 					  GTK_WIDGET(view));
+
 	gtk_widget_show_all(GTK_WIDGET(window));
 }
 
