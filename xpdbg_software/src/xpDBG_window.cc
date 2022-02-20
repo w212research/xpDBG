@@ -14,14 +14,13 @@ uint8_t test_arm_thumb_code[] = {
 
 xpDBG_window::xpDBG_window(int		argc,
 						   char	   *argv[]) {
+	char		   *filename;
 	csh				handle;
 	size_t			count;
 	cs_insn		   *insn;
 	uint8_t		   *buf;
 	size_t			len;
 	int				i;
-
-	char		   *filename;
 
 	Gtk::FileChooserDialog dialog("Please choose a file",
 								  Gtk::FILE_CHOOSER_ACTION_OPEN);
