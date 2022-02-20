@@ -1,6 +1,7 @@
 [submodule "xpdbg_software/submodules/capstone"]
 	path = xpdbg_software/submodules/capstone
 	url = https://github.com/capstone-engine/capstone.git
+	branch=next
 [submodule "xpdbg_software/submodules/keystone"]
 	path = xpdbg_software/submodules/keystone
 	url = https://github.com/keystone-engine/keystone.git
