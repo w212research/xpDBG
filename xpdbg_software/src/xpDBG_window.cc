@@ -2,6 +2,8 @@
 #include "xpDBG_window.h"
 #include <gtkmm.h>
 
+using namespace std;
+
 uint8_t test_arm_thumb_code[] = {
 	0x41,0x20,						//	movs	r0,	#0x41
 	0x40,0xF2,0x20,0x40,			//	movw	r0,	#0x420
@@ -12,11 +14,61 @@ uint8_t test_arm_thumb_code[] = {
 
 xpDBG_window::xpDBG_window(int		argc,
 						   char	   *argv[]) {
+	csh				handle;
+	size_t			count;
 	cs_insn		   *insn;
 	uint8_t		   *buf;
-	size_t			count;
-	csh				handle;
+	size_t			len;
 	int				i;
+
+	char		   *filename;
+
+	Gtk::FileChooserDialog dialog("Please choose a file",
+								  Gtk::FILE_CHOOSER_ACTION_OPEN);
+	dialog.set_transient_for(*this);
+
+	dialog.add_button("_Cancel",
+					  Gtk::RESPONSE_CANCEL);
+	dialog.add_button("_Open",
+					  Gtk::RESPONSE_OK);
+	int result = dialog.run();
+	switch (result) {
+		case (Gtk::RESPONSE_OK): {
+			printf("Opening...\n");
+			filename = strdup(dialog.get_filename().c_str());
+			printf("Filename: %s\n", filename);
+			break;
+		} case (Gtk::RESPONSE_CANCEL): {
+			printf("Cancelled...\n");
+			filename = NULL;
+			break;
+		} default: {
+			printf("The fuck?\n");
+			break;
+		}
+	}
+
+	if (filename == NULL) {
+		buf = test_arm_thumb_code;
+		len = sizeof(test_arm_thumb_code);
+	} else {
+		FILE   *fp	= fopen(filename, "rb");
+
+		fseek(fp, 0, SEEK_END);
+		len	= ftell(fp);
+		rewind(fp);
+
+		/*
+		 *  i'm aware that sizeof(uint8_t); should be 1 on any normal system,
+		 *  and now that i think about it, it always should be (i think):
+		 *  a uint8_t i think is defined as at least 8 bits, so even on systems
+		 *  where CHAR_BIT != 8, it has to be at least 8, so sizeof(uint8_t)
+		 *  should always be 1. i think. eh whatever security
+		 */
+		buf	= (uint8_t*)calloc(len, len / sizeof(uint8_t));
+		fread(buf, sizeof(uint8_t), len / sizeof(uint8_t), fp);
+		fclose(fp);
+	}
 
 	set_title("Disassembly");
 	set_default_size(200,
@@ -36,37 +88,6 @@ xpDBG_window::xpDBG_window(int		argc,
 	our_text_view->set_monospace(true);
 	our_text_view->set_editable(false);
 	our_text_view->set_buffer(our_text_buffer);
-	size_t	len	= 0;
-
-	/*
-	 *  if the args are
-	 *  ./main
-	 *
-	 *  just use the test code
-	 *  otherwise, take the first arg (./main {whatever}), and open it for
-	 *  disassembly.
-	 */
-	if (argc < 2) {
-		buf = test_arm_thumb_code;
-		len = sizeof(test_arm_thumb_code);
-	} else {
-		FILE   *fp	= fopen(argv[1], "rb");
-
-		fseek(fp, 0, SEEK_END);
-		len	= ftell(fp);
-		rewind(fp);
-
-		/*
-		 *  i'm aware that sizeof(uint8_t); should be 1 on any normal system,
-		 *  and now that i think about it, it always should be (i think):
-		 *  a uint8_t i think is defined as at least 8 bits, so even on systems
-		 *  where CHAR_BIT != 8, it has to be at least 8, so sizeof(uint8_t)
-		 *  should always be 1. i think. eh whatever security
-		 */
-		buf	= (uint8_t*)calloc(len, len / sizeof(uint8_t));
-		fread(buf, sizeof(uint8_t), len / sizeof(uint8_t), fp);
-		fclose(fp);
-	}
 
 	/*
 	 *  open capstone handle
