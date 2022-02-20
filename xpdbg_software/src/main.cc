@@ -36,7 +36,8 @@ int main(int	argc,
 	/*
 	 *  create the window object
 	 */
-	xpDBG_window window(argc, argv);
+	xpDBG_window window(argc,
+						argv);
 
 	/*
 	 *  run it
