@@ -26,8 +26,8 @@ xpDBG_window::xpDBG_window(int		argc,
 	 *  create a TextView for the disassembly, as well as a TextBuffer for
 	 *  containing the text
 	 */
-	Gtk::TextView				   *our_text_view	=	new	Gtk::TextView();
-	Glib::RefPtr<Gtk::TextBuffer>	our_text_buffer	=	Gtk::TextBuffer::create();
+	auto   *our_text_view	=	new	Gtk::TextView();
+	auto	our_text_buffer	=	Gtk::TextBuffer::create();
 
 	/*
 	 *  monospace looks better :P
