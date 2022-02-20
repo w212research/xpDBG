@@ -22,14 +22,30 @@ xpDBG_window::xpDBG_window(int		argc,
 	set_default_size(200,
 					 200);
 
+	/*
+	 *  create a TextView for the disassembly, as well as a TextBuffer for
+	 *  containing the text
+	 */
 	Gtk::TextView				   *our_text_view	=	new	Gtk::TextView();
 	Glib::RefPtr<Gtk::TextBuffer>	our_text_buffer	=	Gtk::TextBuffer::create();
 
+	/*
+	 *  monospace looks better :P
+	 *  also we don't want it to be editable
+	 */
 	our_text_view->set_monospace(true);
 	our_text_view->set_editable(false);
 	our_text_view->set_buffer(our_text_buffer);
 	size_t	len	=	0;
 
+	/*
+	 *  if the args are
+	 *  ./main
+	 *
+	 *  just use the test code
+	 *  otherwise, take the first arg (./main {whatever}), and open it for
+	 *  disassembly.
+	 */
 	if (argc < 2) {
 		buf = test_arm_thumb_code;
 		len = sizeof(test_arm_thumb_code);
@@ -40,6 +56,13 @@ xpDBG_window::xpDBG_window(int		argc,
 		len	=	ftell(fp);
 		rewind(fp);
 
+		/*
+		 *  i'm aware that sizeof(uint8_t); should be 1 on any normal system,
+		 *  and now that i think about it, it always should be (i think):
+		 *  a uint8_t i think is defined as at least 8 bits, so even on systems
+		 *  where CHAR_BIT != 8, it has to be at least 8, so sizeof(uint8_t)
+		 *  should always be 1. i think. eh whatever security
+		 */
 		buf	=	(uint8_t*)calloc(len, len / sizeof(uint8_t));
 		fread(buf, sizeof(uint8_t), len / sizeof(uint8_t), fp);
 		fclose(fp);
@@ -63,6 +86,9 @@ xpDBG_window::xpDBG_window(int		argc,
 					  0,
 					  &insn);
 
+	/*
+	 *  initialize with empty string, otherwise it'll start with "(null)"
+	 */
 	char   *disassembly_text	= (char*)"";
 
 	/*
@@ -89,6 +115,9 @@ xpDBG_window::xpDBG_window(int		argc,
 	 */
 	cs_close(&handle);
 
+	/*
+	 *  set the actual thing
+	 */
 	our_text_buffer->set_text(disassembly_text);
 
 	add(*our_text_view);
