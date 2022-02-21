@@ -1,7 +1,7 @@
 #!/bin/bash
 
-CPP=g++
+CC=gcc
 
 rm -rf bin
 mkdir bin
-$CPP src/main.cc src/xpDBG_window.cc src/logging.cc -lcapstone `pkg-config gtkmm-3.0 --cflags --libs` -o bin/main
+$CC -D_GNU_SOURCE src/main.c src/xpDBG_window.c src/logging.c -lcapstone `pkg-config gtk+-3.0 --cflags --libs` -o bin/main

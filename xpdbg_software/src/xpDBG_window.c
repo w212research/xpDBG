@@ -1,9 +1,9 @@
 #include <capstone/capstone.h>
 #include "xpDBG_window.h"
 #include "logging.h"
-#include <gtkmm.h>
-
-using namespace std;
+#include <gtk/gtk.h>
+#include <stdlib.h>
+#include <stdio.h>
 
 uint8_t test_arm_thumb_code[] = {
 	0x41,0x20,						//	movs	r0,	#0x41
@@ -13,47 +13,51 @@ uint8_t test_arm_thumb_code[] = {
 	0x01,0x44,						//	add		r1,	r1,	r0
 };
 
-xpDBG_window::xpDBG_window(int		argc,
-						   char	   *argv[]) {
-	char		   *filename;
-	csh				handle;
-	size_t			count;
-	cs_insn		   *insn;
-	uint8_t		   *buf;
-	size_t			len;
-	int				i;
+void on_app_activate(GApplication  *app,
+					 gpointer		data) {
+	cs_insn*	insn;
+	uint8_t*	buf;
+	size_t		count;
+	size_t		len;
+	char*		filename;
+	csh			handle;
+	int			i;
 
 	xpdbg_log(LOG_INFO, "Landed in xpDBG_window.");
+	GtkWidget*		window		= gtk_application_window_new(GTK_APPLICATION(app));
+	GtkWidget*		text_view	= gtk_text_view_new();
+	GtkTextBuffer*	text_buffer	= gtk_text_buffer_new(NULL);
+
+	gtk_text_view_set_monospace(GTK_TEXT_VIEW(text_view), true);
+	gtk_text_view_set_editable(GTK_TEXT_VIEW(text_view), false);
+
+	GtkFileChooserAction	action = GTK_FILE_CHOOSER_ACTION_OPEN;
+	GtkWidget*				dialog;
+	gint					res;
+
 	xpdbg_log(LOG_INFO, "Asking for file for disassembly...");
-	Gtk::FileChooserDialog dialog("Please choose a file for disassembly.",
-								  Gtk::FILE_CHOOSER_ACTION_OPEN);
-	dialog.set_transient_for(*this);
-
-	dialog.add_button("_Cancel",	Gtk::RESPONSE_CANCEL);
-	dialog.add_button("_Open",		Gtk::RESPONSE_OK);
-
-	int result = dialog.run();
-	switch (result) {
-		case (Gtk::RESPONSE_OK): {
-			/*
-			 *  strdup because otherwise it breaks or something
-			 *  god, i love memory management
-			 */
-
-			xpdbg_log(LOG_INFO, "User chose to open file.");
-			filename = strdup(dialog.get_filename().c_str());
-			xpdbg_log(LOG_INFO, "Filename: %s", filename);
-			break;
-		} case (Gtk::RESPONSE_CANCEL): {
-			xpdbg_log(LOG_INFO, "User cancelled file opening.");
-			filename = NULL;
-			break;
-		} default: {
-			xpdbg_log(LOG_ERROR, "Something went wrong.");
-			return;
-			break;
-		}
+	dialog = gtk_file_chooser_dialog_new("Please choose a file for disassembly.",
+										 GTK_WINDOW(window),
+										 action,
+										 "_Cancel",
+										 GTK_RESPONSE_CANCEL,
+										 "_Open",
+										 GTK_RESPONSE_OK,
+										 NULL);
+	res = gtk_dialog_run(GTK_DIALOG(dialog));
+	if (res == GTK_RESPONSE_OK) {
+		xpdbg_log(LOG_INFO, "User chose to open file.");
+    	GtkFileChooser *chooser = GTK_FILE_CHOOSER(dialog);
+    	filename = strdup(gtk_file_chooser_get_filename(chooser));
+		xpdbg_log(LOG_INFO, "Filename: %s", filename);
+	} else if (res == GTK_RESPONSE_CANCEL) {
+		xpdbg_log(LOG_INFO, "User cancelled file opening, using default ARM code.");
+		filename = NULL;
+	} else {
+		xpdbg_log(LOG_ERROR, "Something went wrong.");
 	}
+
+	gtk_widget_destroy(dialog);
 
 	if (filename == NULL) {
 		xpdbg_log(LOG_INFO, "Using built-in test code.");
@@ -84,26 +88,7 @@ xpDBG_window::xpDBG_window(int		argc,
 		fclose(fp);
 	}
 
-	set_title("Disassembly");
-	set_default_size(200,
-					 200);
-
-	xpdbg_log(LOG_VERBOSE, "Creating GTK TextView and TextBuffer...");
-	/*
-	 *  create a TextView for the disassembly, as well as a TextBuffer for
-	 *  containing the text
-	 */
-	auto   *our_text_view	= new Gtk::TextView();
-	auto	our_text_buffer	= Gtk::TextBuffer::create();
-
-	xpdbg_log(LOG_VERBOSE, "Setting TextView properties...");
-	/*
-	 *  monospace looks better :P
-	 *  also we don't want it to be editable
-	 */
-	our_text_view->set_monospace(true);
-	our_text_view->set_editable(false);
-	our_text_view->set_buffer(our_text_buffer);
+	gtk_window_set_title(GTK_WINDOW(window), "Disassembly");
 
 	xpdbg_log(LOG_VERBOSE, "Opening Capstone handle.");
 	/*
@@ -157,20 +142,8 @@ xpDBG_window::xpDBG_window(int		argc,
 	 */
 	cs_close(&handle);
 
-	/*
-	 *  set the actual thing
-	 */
-	our_text_buffer->set_text(disassembly_text);
-
-	xpdbg_log(LOG_VERBOSE, "Adding TextView...");
-	add(*our_text_view);
-
-	xpdbg_log(LOG_VERBOSE, "Showing...");
-	show_all_children();
-}
-
-xpDBG_window::~xpDBG_window(void) {
-	/*
-	 *  empty function
-	 */
+	gtk_text_buffer_set_text(text_buffer, disassembly_text, -1);
+	gtk_text_view_set_buffer(GTK_TEXT_VIEW(text_view), text_buffer);
+	gtk_container_add(GTK_CONTAINER(window), text_view);
+	gtk_widget_show_all(GTK_WIDGET(window));
 }
