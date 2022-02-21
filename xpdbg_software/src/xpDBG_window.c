@@ -90,19 +90,19 @@ void on_app_activate(GApplication  *app,
 
 	gtk_window_set_title(GTK_WINDOW(window), "Disassembly");
 
-	xpdbg_log(LOG_VERBOSE, "Opening Capstone handle.");
 	/*
 	 *  open capstone handle
 	 *  CS_MODE_THUMB as this is thumb code
 	 */
+	xpdbg_log(LOG_VERBOSE, "Opening Capstone handle.");
 	cs_open(CS_ARCH_ARM,
 			(cs_mode)(CS_MODE_THUMB),
 			&handle);
 
-	xpdbg_log(LOG_INFO, "Disassembling code...");
 	/*
 	 *  disassemble it
 	 */
+	xpdbg_log(LOG_INFO, "Disassembling code...");
 	count = cs_disasm(handle,
 					  buf,
 					  len,
@@ -111,10 +111,10 @@ void on_app_activate(GApplication  *app,
 					  &insn);
 
 
-	xpdbg_log(LOG_INFO, "Formatting disassembly...");
 	/*
 	 *  initialize with empty string, otherwise it'll start with "(null)"
 	 */
+	xpdbg_log(LOG_INFO, "Formatting disassembly...");
 	char   *disassembly_text	= (char*)"";
 
 	/*
@@ -136,10 +136,10 @@ void on_app_activate(GApplication  *app,
 				count);
 	}
 
-	xpdbg_log(LOG_VERBOSE, "Closing Capstone handle...");
 	/*
 	 *  good little programmers, we are
 	 */
+	xpdbg_log(LOG_VERBOSE, "Closing Capstone handle...");
 	cs_close(&handle);
 
 	gtk_text_buffer_set_text(text_buffer, disassembly_text, -1);
