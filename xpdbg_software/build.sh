@@ -1,5 +1,8 @@
 #!/bin/bash
 
+echo "Outdated. Use \`make\`."
+exit -1
+
 CPP=g++
 
 rm -rf bin
