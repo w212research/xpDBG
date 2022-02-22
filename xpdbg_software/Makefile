@@ -1,4 +1,8 @@
-CPP=g++
+ifdef CPP
+	# don't re-define
+else
+	CPP=g++
+endif
 CPPFLAGS=--std=c++17 `pkg-config gtkmm-3.0 --cflags`
 
 all: bin/main
