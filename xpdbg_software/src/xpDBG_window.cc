@@ -143,7 +143,7 @@ xpDBG_window::xpDBG_window(int		argc,
 			asprintf(&disassembly_text,
 					 "%s0x%016llx:\t%s\t\t%s\n",
 					 disassembly_text,
-					 insn[i].address,
+					 (unsigned long long)insn[i].address,
 					 insn[i].mnemonic,
 					 insn[i].op_str);
 		}
