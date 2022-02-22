@@ -5,6 +5,9 @@
 
 using namespace std;
 
+#define ADDRESS_FORMAT "0x%08llx"
+#define DISASSEMBLY_STR ADDRESS_FORMAT ":\t%s\t%s"
+
 uint8_t test_arm_thumb_code[] = {
 	0x41,0x20,						//	movs	r0,	#0x41
 	0x40,0xF2,0x20,0x40,			//	movw	r0,	#0x420
@@ -145,7 +148,7 @@ xpDBG_window::xpDBG_window(int		argc,
 	if (count > 0) {
 		for (i = 0; i < count; i++) {
 			asprintf(&disassembly_text,
-					 "%s0x%016llx:\t%s\t\t%s\n",
+					 "%s" DISASSEMBLY_STR "\n",
 					 disassembly_text,
 					 (unsigned long long)insn[i].address,
 					 insn[i].mnemonic,
