@@ -8,3 +8,6 @@
 [submodule "xpdbg_software/submodules/unicorn"]
 	path = xpdbg_software/submodules/unicorn
 	url = https://github.com/unicorn-engine/unicorn.git
+[submodule "xpdbg_software/submodules/LIEF"]
+	path = xpdbg_software/submodules/LIEF
+	url = https://github.com/lief-project/LIEF.git
