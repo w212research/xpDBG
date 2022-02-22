@@ -82,8 +82,12 @@ xpDBG_window::xpDBG_window(int		argc,
 
 		xpdbg_log(LOG_VERBOSE, "Allocating memory...");
 
-		buf	= (uint8_t*)calloc(len, len / sizeof(uint8_t));
-		fread(buf, sizeof(uint8_t), len / sizeof(uint8_t), fp);
+		buf	= (uint8_t*)calloc(len,
+							   len / sizeof(uint8_t));
+		fread(buf,
+			  sizeof(uint8_t),
+			  len / sizeof(uint8_t),
+			  fp);
 		fclose(fp);
 	}
 
