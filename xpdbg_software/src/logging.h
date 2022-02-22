@@ -3,10 +3,10 @@
 
 typedef enum {
 	LOG_VERBOSE,
-	LOG_CRITICAL,
-	LOG_ERROR,
-	LOG_WARNING,
 	LOG_INFO,
+	LOG_WARNING,
+	LOG_ERROR,
+	LOG_CRITICAL,
 } log_level_t;
 typedef enum {
 	LOG_UNIMPORTANT,

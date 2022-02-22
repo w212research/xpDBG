@@ -7,10 +7,14 @@
 using namespace std;
 
 static log_level_t	current_log_level;
-char 				log_char[] = "vcewi";
+char 				log_char[] = "viwec";
 
 log_status_t xpdbg_log(log_level_t log_level, const char* fmt, ...) {
 	if (log_level < current_log_level) {
+		/*
+		 *  do not log messages that are less important / more verbose
+		 *  than the current log level
+		 */
 		return LOG_UNIMPORTANT;
 	} else {
 		va_list		args;
@@ -20,6 +24,9 @@ log_status_t xpdbg_log(log_level_t log_level, const char* fmt, ...) {
 		struct	tm *time_info;
 		time_t		raw_time;
 
+		/*
+		 *  get the time, convert to a string
+		 */
 		time(&raw_time);
 		time_info	= localtime(&raw_time);
 		asctime_ret	= asctime(time_info);
@@ -34,10 +41,19 @@ log_status_t xpdbg_log(log_level_t log_level, const char* fmt, ...) {
 			}
 		}
 
+		/*
+		 *  variadic function stuff
+		 */
 		va_start(args, fmt);
-
 		vasprintf(&s_to_print, fmt, args);
-		printf("[[%c] xpDBG (%s)]: %s\n", log_char[log_level], asctime_ret, s_to_print);
+
+		/*
+		 *  print that shit
+		 */
+		printf("[[%c] xpDBG (%s)]: %s\n",
+			   log_char[log_level],
+			   asctime_ret,
+			   s_to_print);
 
 		va_end(args);
 
