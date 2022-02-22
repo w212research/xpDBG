@@ -4,6 +4,12 @@ xpdbg_software/bin/*
 xpdbg_software/bin/**
 xpdbg_software/bin/**/*
 
+# just do everything, better safe than sorry
+xpdbg_software/wip_components/*/bin
+xpdbg_software/wip_components/*/bin/*
+xpdbg_software/wip_components/*/bin/**
+xpdbg_software/wip_components/*/bin/**/*
+
 # .DS_Store files make me want to not be alive
 .DS_Store
 */.DS_Store
