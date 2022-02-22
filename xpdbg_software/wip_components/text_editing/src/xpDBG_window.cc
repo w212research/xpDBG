@@ -6,8 +6,8 @@ using namespace std;
 
 #define BORDER_WIDTH 10
 
-xpDBG_window::xpDBG_window(int		argc,
-						   char	   *argv[]) {
+xpDBG_window::xpDBG_window(int   argc,
+						   char* argv[]) {
 	char*    filename;
 	size_t   count;
 	uint8_t* buf;
@@ -47,8 +47,11 @@ xpDBG_window::xpDBG_window(int		argc,
 	}
 
 	if (filename == NULL) {
-		xpdbg_log(LOG_ERROR, "Error: filename == NULL.");
-		return;
+		xpdbg_log(LOG_INFO, "Using empty file.");
+		filename = strdup("new file");
+		len = 1;
+		buf = (uint8_t*)calloc(len,
+							   len / sizeof(uint8_t));
 	} else {
 		xpdbg_log(LOG_INFO, "Opening %s...",
 				  filename);
@@ -90,8 +93,8 @@ xpDBG_window::xpDBG_window(int		argc,
 	 *  containing the text
 	 */
 	xpdbg_log(LOG_VERBOSE, "Creating GTK TextView and TextBuffer...");
-	auto* our_text_view   = new Gtk::TextView();
-	auto  our_text_buffer = Gtk::TextBuffer::create();
+	our_text_view   = new Gtk::TextView();
+	our_text_buffer = Gtk::TextBuffer::create();
 
 	/*
 	 *  monospace looks better :P
@@ -130,4 +133,6 @@ xpDBG_window::~xpDBG_window(void) {
 	/*
 	 *  empty function
 	 */
+
+	printf("%s\n", our_text_buffer->get_text().c_str());
 }
