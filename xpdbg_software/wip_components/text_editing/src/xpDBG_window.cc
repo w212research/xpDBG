@@ -130,9 +130,5 @@ xpDBG_window::xpDBG_window(int   argc,
 }
 
 xpDBG_window::~xpDBG_window(void) {
-	/*
-	 *  empty function
-	 */
-
 	printf("%s\n", our_text_buffer->get_text().c_str());
 }
