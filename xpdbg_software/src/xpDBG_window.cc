@@ -140,7 +140,10 @@ xpDBG_window::xpDBG_window(int		argc,
 	 *  initialize with empty string, otherwise it'll start with "(null)"
 	 */
 	xpdbg_log(LOG_INFO, "Formatting disassembly...");
-	char* disassembly_text = (char*)"";
+	char* disassembly_text = NULL;
+
+	asprintf(&disassembly_text,
+			 "");
 
 	/*
 	 *  format it
