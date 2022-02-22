@@ -30,25 +30,25 @@ int main(int	argc,
 	xpdbg_set_log_level(LOG_VERBOSE);
 	xpdbg_log(LOG_INFO, "xpDBG Loaded.");
 
-	xpdbg_log(LOG_INFO, "Creating GTK application...");
 	/*
 	 *  create the app
 	 */
+	xpdbg_log(LOG_INFO, "Creating GTK application...");
 	auto app = Gtk::Application::create(fake_argc,
 										fake_argv,
 										"org.xpdbg.xpdbg");
 
-	xpdbg_log(LOG_INFO, "Creating xpDBG_window...");
 	/*
 	 *  create the window object
 	 */
+	xpdbg_log(LOG_INFO, "Creating xpDBG_window...");
 	xpDBG_window window(argc,
 						argv);
 
 
-	xpdbg_log(LOG_INFO, "Running xpDBG_window...");
 	/*
 	 *  run it
 	 */
+	xpdbg_log(LOG_INFO, "Running xpDBG_window...");
 	return app->run(window);
 }

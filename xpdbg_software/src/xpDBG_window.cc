@@ -60,14 +60,17 @@ xpDBG_window::xpDBG_window(int		argc,
 		buf = test_arm_thumb_code;
 		len = sizeof(test_arm_thumb_code);
 	} else {
-		xpdbg_log(LOG_INFO, "Opening %s...", filename);
+		xpdbg_log(LOG_INFO, "Opening %s...",
+				  filename);
 		FILE   *fp	= fopen(filename, "rb");
 
 		fseek(fp, 0, SEEK_END);
 		len	= ftell(fp);
 		rewind(fp);
 
-		xpdbg_log(LOG_INFO, "File is %d bytes (0x%x in hex) long.", len, len);
+		xpdbg_log(LOG_INFO, "File is %d bytes (0x%x in hex) long.",
+				  len,
+				  len);
 
 		/*
 		 *  i'm aware that sizeof(uint8_t); should be 1 on any normal system,
@@ -88,36 +91,36 @@ xpDBG_window::xpDBG_window(int		argc,
 	set_default_size(200,
 					 200);
 
-	xpdbg_log(LOG_VERBOSE, "Creating GTK TextView and TextBuffer...");
 	/*
 	 *  create a TextView for the disassembly, as well as a TextBuffer for
 	 *  containing the text
 	 */
+	xpdbg_log(LOG_VERBOSE, "Creating GTK TextView and TextBuffer...");
 	auto   *our_text_view	= new Gtk::TextView();
 	auto	our_text_buffer	= Gtk::TextBuffer::create();
 
-	xpdbg_log(LOG_VERBOSE, "Setting TextView properties...");
 	/*
 	 *  monospace looks better :P
 	 *  also we don't want it to be editable
 	 */
+	xpdbg_log(LOG_VERBOSE, "Setting TextView properties...");
 	our_text_view->set_monospace(true);
 	our_text_view->set_editable(false);
 	our_text_view->set_buffer(our_text_buffer);
 
-	xpdbg_log(LOG_VERBOSE, "Opening Capstone handle.");
 	/*
 	 *  open capstone handle
 	 *  CS_MODE_THUMB as this is thumb code
 	 */
+	xpdbg_log(LOG_VERBOSE, "Opening Capstone handle.");
 	cs_open(CS_ARCH_ARM,
 			(cs_mode)(CS_MODE_THUMB),
 			&handle);
 
-	xpdbg_log(LOG_INFO, "Disassembling code...");
 	/*
 	 *  disassemble it
 	 */
+	xpdbg_log(LOG_INFO, "Disassembling code...");
 	count = cs_disasm(handle,
 					  buf,
 					  len,
@@ -126,10 +129,10 @@ xpDBG_window::xpDBG_window(int		argc,
 					  &insn);
 
 
-	xpdbg_log(LOG_INFO, "Formatting disassembly...");
 	/*
 	 *  initialize with empty string, otherwise it'll start with "(null)"
 	 */
+	xpdbg_log(LOG_INFO, "Formatting disassembly...");
 	char   *disassembly_text	= (char*)"";
 
 	/*
@@ -137,7 +140,8 @@ xpDBG_window::xpDBG_window(int		argc,
 	 */
 	if (count > 0) {
 		for (i = 0; i < count; i++) {
-			asprintf(&disassembly_text, "%s0x%016lx:\t%s\t\t%s\n",
+			asprintf(&disassembly_text,
+					 "%s0x%016llx:\t%s\t\t%s\n",
 					 disassembly_text,
 					 insn[i].address,
 					 insn[i].mnemonic,
@@ -151,10 +155,10 @@ xpDBG_window::xpDBG_window(int		argc,
 				count);
 	}
 
-	xpdbg_log(LOG_VERBOSE, "Closing Capstone handle...");
 	/*
 	 *  good little programmers, we are
 	 */
+	xpdbg_log(LOG_VERBOSE, "Closing Capstone handle...");
 	cs_close(&handle);
 
 	/*
