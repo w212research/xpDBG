@@ -88,8 +88,8 @@ xpDBG_window::xpDBG_window(int		argc,
 	}
 
 	set_title("Disassembly");
-	set_default_size(200,
-					 200);
+	set_default_size(640,
+					 480);
 
 	/*
 	 *  create a TextView for the disassembly, as well as a TextBuffer for
@@ -166,8 +166,20 @@ xpDBG_window::xpDBG_window(int		argc,
 	 */
 	our_text_buffer->set_text(disassembly_text);
 
-	xpdbg_log(LOG_VERBOSE, "Adding TextView...");
-	add(*our_text_view);
+	/*
+	 *  add text view to scrolledwindow and init scrolledwindow
+	 */
+	 xpdbg_log(LOG_VERBOSE, "Initializing ScrolledWindow.");
+
+	sw.set_policy(Gtk::POLICY_ALWAYS, Gtk::POLICY_ALWAYS);
+	sw.set_border_width(10);
+
+	xpdbg_log(LOG_VERBOSE, "Adding TextView.");
+	sw.add(*our_text_view);
+	sw.show_all_children();
+
+	xpdbg_log(LOG_VERBOSE, "Adding ScrolledWinow...");
+	add(sw);
 
 	xpdbg_log(LOG_VERBOSE, "Showing...");
 	show_all_children();
