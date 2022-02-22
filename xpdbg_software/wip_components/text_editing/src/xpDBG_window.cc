@@ -79,7 +79,7 @@ xpDBG_window::xpDBG_window(int		argc,
 		fclose(fp);
 	}
 
-	set_title("File");
+	set_title(filename);
 	set_default_size(640,
 					 480);
 
