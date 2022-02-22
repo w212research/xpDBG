@@ -18,13 +18,13 @@ uint8_t test_arm_thumb_code[] = {
 
 xpDBG_window::xpDBG_window(int		argc,
 						   char	   *argv[]) {
-	char		   *filename;
-	csh				handle;
-	size_t			count;
-	cs_insn		   *insn;
-	uint8_t		   *buf;
-	size_t			len;
-	int				i;
+	char*    filename;
+	csh      handle;
+	size_t   count;
+	cs_insn* insn;
+	uint8_t* buf;
+	size_t   len;
+	int      i;
 
 	xpdbg_log(LOG_INFO, "Landed in xpDBG_window.");
 	xpdbg_log(LOG_INFO, "Asking for file for disassembly...");
@@ -103,8 +103,8 @@ xpDBG_window::xpDBG_window(int		argc,
 	 *  containing the text
 	 */
 	xpdbg_log(LOG_VERBOSE, "Creating GTK TextView and TextBuffer...");
-	auto   *our_text_view	= new Gtk::TextView();
-	auto	our_text_buffer	= Gtk::TextBuffer::create();
+	auto* our_text_view   = new Gtk::TextView();
+	auto  our_text_buffer = Gtk::TextBuffer::create();
 
 	/*
 	 *  monospace looks better :P
@@ -140,7 +140,7 @@ xpDBG_window::xpDBG_window(int		argc,
 	 *  initialize with empty string, otherwise it'll start with "(null)"
 	 */
 	xpdbg_log(LOG_INFO, "Formatting disassembly...");
-	char   *disassembly_text	= (char*)"";
+	char* disassembly_text = (char*)"";
 
 	/*
 	 *  format it
