@@ -137,7 +137,7 @@ xpDBG_window::xpDBG_window(int		argc,
 	 */
 	if (count > 0) {
 		for (i = 0; i < count; i++) {
-			asprintf(&disassembly_text, "%s0x%016lx:\t%s\t\t%s\n",
+			asprintf(&disassembly_text, "%s0x%016llx:\t%s\t\t%s\n",
 					 disassembly_text,
 					 insn[i].address,
 					 insn[i].mnemonic,
