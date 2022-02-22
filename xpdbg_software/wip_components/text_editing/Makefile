@@ -1,8 +1,4 @@
-ifdef CPP
-	# don't re-define
-else
-	CPP=g++
-endif
+CPP=clang++
 CPPFLAGS=--std=c++17 `pkg-config gtkmm-3.0 --cflags`
 
 all: bin/main
