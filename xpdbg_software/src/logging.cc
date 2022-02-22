@@ -1,8 +1,10 @@
 #include "logging.h"
-#include <stdarg.h>
-#include <string.h>
-#include <stdio.h>
-#include <time.h>
+#include <cstdarg>
+#include <cstring>
+#include <cstdio>
+#include <ctime>
+
+using namespace std;
 
 static log_level_t	current_log_level;
 char 				log_char[] = "vcewi";

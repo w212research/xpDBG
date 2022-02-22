@@ -1,9 +1,13 @@
 #ifndef XPDBG_WINDOW_H
 #define XPDBG_WINDOW_H
 
-#include <gtk/gtk.h>
+#include <gtkmm.h>
 
-void on_app_activate(GApplication   *app,
-							gpointer		data);
+class xpDBG_window : public Gtk::Window {
+public:
+	xpDBG_window(int		argc,
+				 char	   *argv[]);
+	virtual ~xpDBG_window();
+};
 
 #endif
