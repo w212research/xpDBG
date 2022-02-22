@@ -6,6 +6,10 @@ endif
 CPPFLAGS=--std=c++17 `pkg-config gtkmm-3.0 --cflags`
 
 all: bin/main
+	#
+
+create_folders:
+	sh -c "rm -rf bin; mkdir bin"
 
 bin/main: bin/main.o bin/logging.o bin/xpDBG_window.o
 	${CPP} ${CPPFLAGS} `pkg-config gtkmm-3.0 --cflags --libs` -lcapstone $^ -o $@
