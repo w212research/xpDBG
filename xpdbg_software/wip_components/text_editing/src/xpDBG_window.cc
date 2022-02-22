@@ -4,6 +4,8 @@
 
 using namespace std;
 
+#define BORDER_WIDTH 10
+
 xpDBG_window::xpDBG_window(int		argc,
 						   char	   *argv[]) {
 	char*    filename;
@@ -111,7 +113,7 @@ xpDBG_window::xpDBG_window(int		argc,
 	 xpdbg_log(LOG_VERBOSE, "Initializing ScrolledWindow.");
 
 	sw.set_policy(Gtk::POLICY_ALWAYS, Gtk::POLICY_ALWAYS);
-	sw.set_border_width(10);
+	sw.set_border_width(BORDER_WIDTH);
 
 	xpdbg_log(LOG_VERBOSE, "Adding TextView.");
 	sw.add(*our_text_view);
