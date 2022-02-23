@@ -13,7 +13,8 @@ typedef enum {
 	LOG_SUCCESS,
 } log_status_t;
 
-log_status_t xpdbg_log(log_level_t log_level, const char* fmt, ...);
+log_status_t xpdbg_log(log_level_t log_level,
+					   const char* fmt, ...);
 log_status_t xpdbg_set_log_level(log_level_t log_level);
 
 #endif
