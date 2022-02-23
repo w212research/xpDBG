@@ -20,10 +20,10 @@ uint8_t test_arm_thumb_code[] = {
 	0x01,0x44,						//	add		r1,	r1,	r0
 };
 
-void hook_code(uc_engine   *uc,
-			   uint64_t		address,
-			   uint32_t		size,
-			   void		   *user_data) {
+void hook_code(uc_engine* uc,
+			   uint64_t   address,
+			   uint32_t   size,
+			   void*      user_data) {
 	uint32_t regs[16];
 
 	int i = 0;
@@ -65,8 +65,8 @@ void hook_code(uc_engine   *uc,
 	asprintf(&disassembly_text, "%sr%d:\t0x%08x\n", disassembly_text, i, regs[i]); i++;
 }
 
-xpDBG_window::xpDBG_window(int		argc,
-						   char	   *argv[]) {
+xpDBG_window::xpDBG_window(int   argc,
+						   char* argv[]) {
 	char*      filename;
 	csh        handle;
 	uc_hook    hook1;
@@ -278,7 +278,7 @@ xpDBG_window::xpDBG_window(int		argc,
 	show_all_children();
 }
 
-xpDBG_window::~xpDBG_window(void) {
+xpDBG_window::~xpDBG_window() {
 	/*
 	 *  empty function
 	 */
