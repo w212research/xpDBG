@@ -113,7 +113,7 @@ xpDBG_window::xpDBG_window(int   argc,
 	/*
 	 *  add text view to scrolledwindow and init scrolledwindow
 	 */
-	 xpdbg_log(LOG_VERBOSE, "Initializing ScrolledWindow.");
+	xpdbg_log(LOG_VERBOSE, "Initializing ScrolledWindow.");
 
 	sw.set_policy(Gtk::POLICY_ALWAYS, Gtk::POLICY_ALWAYS);
 	sw.set_border_width(BORDER_WIDTH);
