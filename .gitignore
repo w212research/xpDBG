@@ -15,6 +15,12 @@ xpdbg_software/wip_components/*/bin/**/*
 */.DS_Store
 **/.DS_Store
 
+# CMake be damned
+build
+*/build
+**/build
+**/*/build
+
 # nano damn you
 *.swp
 
