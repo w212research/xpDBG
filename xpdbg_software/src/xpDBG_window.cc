@@ -262,9 +262,6 @@ xpDBG_window::xpDBG_window(int   argc,
 				  err);
 	}
 
-	xpdbg_log(LOG_VERBOSE, "Closing Unicorn Engine...");
-	uc_close(uc);
-
 	/*
 	 *  set the actual thing
 	 */
@@ -291,12 +288,11 @@ xpDBG_window::xpDBG_window(int   argc,
 
 xpDBG_window::~xpDBG_window() {
 	/*
-	 *  empty function
-	 */
-
-	/*
 	 *  good little programmers, we are
 	 */
 	xpdbg_log(LOG_VERBOSE, "Closing Capstone handle...");
 	cs_close(&handle);
+
+	xpdbg_log(LOG_VERBOSE, "Closing Unicorn Engine...");
+	uc_close(uc);
 }
