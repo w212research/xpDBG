@@ -1,4 +1,5 @@
 #include <capstone/capstone.h>
+#include <unicorn/unicorn.h>
 #include "xpDBG_window.h"
 #include "logging.h"
 #include <gtkmm.h>
@@ -8,6 +9,9 @@ using namespace std;
 #define ADDRESS_FORMAT "0x%08llx"
 #define DISASSEMBLY_STR ADDRESS_FORMAT ":\t%s\t%s"
 
+#define BASE_ADDY 0x0
+
+char*   disassembly_text = NULL;
 uint8_t test_arm_thumb_code[] = {
 	0x41,0x20,						//	movs	r0,	#0x41
 	0x40,0xF2,0x20,0x40,			//	movw	r0,	#0x420
@@ -16,15 +20,63 @@ uint8_t test_arm_thumb_code[] = {
 	0x01,0x44,						//	add		r1,	r1,	r0
 };
 
+void hook_code(uc_engine   *uc,
+			   uint64_t		address,
+			   uint32_t		size,
+			   void		   *user_data) {
+	uint32_t regs[16];
+
+	int i = 0;
+	uc_reg_read(uc, UC_ARM_REG_R0, &regs[i++]);
+	uc_reg_read(uc, UC_ARM_REG_R1, &regs[i++]);
+	uc_reg_read(uc, UC_ARM_REG_R2, &regs[i++]);
+	uc_reg_read(uc, UC_ARM_REG_R3, &regs[i++]);
+	uc_reg_read(uc, UC_ARM_REG_R4, &regs[i++]);
+	uc_reg_read(uc, UC_ARM_REG_R5, &regs[i++]);
+	uc_reg_read(uc, UC_ARM_REG_R6, &regs[i++]);
+	uc_reg_read(uc, UC_ARM_REG_R7, &regs[i++]);
+	uc_reg_read(uc, UC_ARM_REG_R8, &regs[i++]);
+	uc_reg_read(uc, UC_ARM_REG_R9, &regs[i++]);
+	uc_reg_read(uc, UC_ARM_REG_R10, &regs[i++]);
+	uc_reg_read(uc, UC_ARM_REG_R11, &regs[i++]);
+	uc_reg_read(uc, UC_ARM_REG_R12, &regs[i++]);
+	uc_reg_read(uc, UC_ARM_REG_R13, &regs[i++]);
+	uc_reg_read(uc, UC_ARM_REG_R14, &regs[i++]);
+	uc_reg_read(uc, UC_ARM_REG_R15, &regs[i++]);
+
+	i = 0;
+
+	asprintf(&disassembly_text, "%sRegisters:\n", disassembly_text);
+	asprintf(&disassembly_text, "%sr%d:\t0x%08x\n", disassembly_text, i, regs[i]); i++;
+	asprintf(&disassembly_text, "%sr%d:\t0x%08x\n", disassembly_text, i, regs[i]); i++;
+	asprintf(&disassembly_text, "%sr%d:\t0x%08x\n", disassembly_text, i, regs[i]); i++;
+	asprintf(&disassembly_text, "%sr%d:\t0x%08x\n", disassembly_text, i, regs[i]); i++;
+	asprintf(&disassembly_text, "%sr%d:\t0x%08x\n", disassembly_text, i, regs[i]); i++;
+	asprintf(&disassembly_text, "%sr%d:\t0x%08x\n", disassembly_text, i, regs[i]); i++;
+	asprintf(&disassembly_text, "%sr%d:\t0x%08x\n", disassembly_text, i, regs[i]); i++;
+	asprintf(&disassembly_text, "%sr%d:\t0x%08x\n", disassembly_text, i, regs[i]); i++;
+	asprintf(&disassembly_text, "%sr%d:\t0x%08x\n", disassembly_text, i, regs[i]); i++;
+	asprintf(&disassembly_text, "%sr%d:\t0x%08x\n", disassembly_text, i, regs[i]); i++;
+	asprintf(&disassembly_text, "%sr%d:\t0x%08x\n", disassembly_text, i, regs[i]); i++;
+	asprintf(&disassembly_text, "%sr%d:\t0x%08x\n", disassembly_text, i, regs[i]); i++;
+	asprintf(&disassembly_text, "%sr%d:\t0x%08x\n", disassembly_text, i, regs[i]); i++;
+	asprintf(&disassembly_text, "%sr%d:\t0x%08x\n", disassembly_text, i, regs[i]); i++;
+	asprintf(&disassembly_text, "%sr%d:\t0x%08x\n", disassembly_text, i, regs[i]); i++;
+	asprintf(&disassembly_text, "%sr%d:\t0x%08x\n", disassembly_text, i, regs[i]); i++;
+}
+
 xpDBG_window::xpDBG_window(int		argc,
 						   char	   *argv[]) {
-	char*    filename;
-	csh      handle;
-	size_t   count;
-	cs_insn* insn;
-	uint8_t* buf;
-	size_t   len;
-	int      i;
+	char*      filename;
+	csh        handle;
+	uc_hook    hook1;
+	size_t     count;
+	cs_insn*   insn;
+	uint8_t*   buf;
+	size_t     len;
+	uc_err     err;
+	uc_engine* uc;
+	int        i;
 
 	xpdbg_log(LOG_INFO, "Landed in xpDBG_window.");
 	xpdbg_log(LOG_INFO, "Asking for file for disassembly...");
@@ -131,7 +183,7 @@ xpDBG_window::xpDBG_window(int		argc,
 	count = cs_disasm(handle,
 					  buf,
 					  len,
-					  0x1000,
+					  BASE_ADDY,
 					  0,
 					  &insn);
 
@@ -140,7 +192,6 @@ xpDBG_window::xpDBG_window(int		argc,
 	 *  initialize with empty string, otherwise it'll start with "(null)"
 	 */
 	xpdbg_log(LOG_INFO, "Formatting disassembly...");
-	char* disassembly_text = NULL;
 
 	asprintf(&disassembly_text,
 			 "");
@@ -170,6 +221,38 @@ xpDBG_window::xpDBG_window(int		argc,
 	 */
 	xpdbg_log(LOG_VERBOSE, "Closing Capstone handle...");
 	cs_close(&handle);
+
+	/*
+	 *  open unicorn engine
+	 */
+	xpdbg_log(LOG_VERBOSE, "Opening Unicorn Engine...");
+	err = uc_open(UC_ARCH_ARM,
+				  UC_MODE_THUMB,
+				  &uc);
+	if (err) {
+		xpdbg_log(LOG_ERROR, "Failed on uc_open() with error returned: %u (%s)\n",
+				  err,
+				  uc_strerror(err));
+		return;
+	}
+
+	xpdbg_log(LOG_VERBOSE, "Mapping memory for emulation...");
+	uc_mem_map(uc, BASE_ADDY, 0x100000, UC_PROT_ALL);
+	xpdbg_log(LOG_VERBOSE, "Copying executable for emulation...");
+	uc_mem_write(uc, BASE_ADDY, buf, len);
+
+	xpdbg_log(LOG_VERBOSE, "Adding instruction hook for emulation...");
+	uc_hook_add(uc, &hook1, UC_HOOK_CODE, (void*)hook_code, NULL, BASE_ADDY, BASE_ADDY + len);
+
+	xpdbg_log(LOG_VERBOSE, "Beginning emulation...");
+	err = uc_emu_start(uc, BASE_ADDY | 1, BASE_ADDY + len, 0, 0);
+	if (err) {
+		xpdbg_log(LOG_ERROR, "Failed on uc_emu_start() with error returned: %u\n",
+				  err);
+	}
+
+	xpdbg_log(LOG_VERBOSE, "Closing Unicorn Engine...");
+	uc_close(uc);
 
 	/*
 	 *  set the actual thing
