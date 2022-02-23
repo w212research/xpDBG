@@ -3,8 +3,8 @@
 #include <gtkmm.h>
 #include <cstdio>
 
-int main(int	argc,
-		 char  *argv[]) {
+int main(int   argc,
+		 char* argv[]) {
 	/*
 	 *  TODO: make this code look better, it looks like shit.
 	 *
