@@ -17,9 +17,9 @@ int main(int	argc,
 	 *  (main:13170): GLib-GIO-CRITICAL **: 14:22:18.291: This application can not open files.
 	 *  spv@jkek420:/.../xpdbg/xpdbg_software$
 	 */
-	int			fake_argc	= 1;
-	char	  **fake_argv	= NULL;
-	fake_argv				= (char**)calloc(sizeof(uintptr_t), 2);
+	int       fake_argc	= 1;
+	char**    fake_argv	= NULL;
+	fake_argv = (char**)calloc(sizeof(uintptr_t), 2);
 
 	/*
 	 *  populate the array
