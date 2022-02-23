@@ -18,13 +18,22 @@ uint8_t test_arm_thumb_code[] = {
 	0x40,0xF2,0x69,0x01,			//	movw	r1,	#0x69
 	0xA0,0xEB,0x01,0x00,			//	sub		r0,	r0,	r1
 	0x01,0x44,						//	add		r1,	r1,	r0
+	0x00,0x00,						//  mov		r0,	r0
 };
+
+csh handle;
 
 void hook_code(uc_engine* uc,
 			   uint64_t   address,
 			   uint32_t   size,
 			   void*      user_data) {
+	uint8_t  instruction[size];
 	uint32_t regs[16];
+	cs_insn* insn;
+
+	uc_mem_read(uc, address, instruction, size);
+
+	cs_disasm(handle, instruction, size, address, 0, &insn);
 
 	int i = 0;
 	uc_reg_read(uc, UC_ARM_REG_R0, &regs[i++]);
@@ -45,7 +54,6 @@ void hook_code(uc_engine* uc,
 	uc_reg_read(uc, UC_ARM_REG_R15, &regs[i++]);
 
 	i = 0;
-
 	asprintf(&disassembly_text, "%sRegisters:\n", disassembly_text);
 	asprintf(&disassembly_text, "%sr%d:\t0x%08x\n", disassembly_text, i, regs[i]); i++;
 	asprintf(&disassembly_text, "%sr%d:\t0x%08x\n", disassembly_text, i, regs[i]); i++;
@@ -63,12 +71,18 @@ void hook_code(uc_engine* uc,
 	asprintf(&disassembly_text, "%sr%d:\t0x%08x\n", disassembly_text, i, regs[i]); i++;
 	asprintf(&disassembly_text, "%sr%d:\t0x%08x\n", disassembly_text, i, regs[i]); i++;
 	asprintf(&disassembly_text, "%sr%d:\t0x%08x\n", disassembly_text, i, regs[i]); i++;
+
+	asprintf(&disassembly_text,
+			 "%s" DISASSEMBLY_STR "\n",
+			 disassembly_text,
+			 (unsigned long long)insn[0].address,
+			 insn[0].mnemonic,
+			 insn[0].op_str);
 }
 
 xpDBG_window::xpDBG_window(int   argc,
 						   char* argv[]) {
 	char*      filename;
-	csh        handle;
 	uc_hook    hook1;
 	size_t     count;
 	cs_insn*   insn;
@@ -216,11 +230,8 @@ xpDBG_window::xpDBG_window(int   argc,
 				count);
 	}
 
-	/*
-	 *  good little programmers, we are
-	 */
-	xpdbg_log(LOG_VERBOSE, "Closing Capstone handle...");
-	cs_close(&handle);
+	asprintf(&disassembly_text, "%s\n\n\n",
+			 disassembly_text);
 
 	/*
 	 *  open unicorn engine
@@ -282,4 +293,10 @@ xpDBG_window::~xpDBG_window() {
 	/*
 	 *  empty function
 	 */
+
+	/*
+	 *  good little programmers, we are
+	 */
+	xpdbg_log(LOG_VERBOSE, "Closing Capstone handle...");
+	cs_close(&handle);
 }
