@@ -85,8 +85,6 @@ void hook_code(uc_engine* uc,
 	asprintf(&out_str, "%sr%d:\t0x%08x\n", out_str, i, regs[i]); i++;
 	asprintf(&out_str, "%s\n\n\n", out_str);
 
-	printf("%s\n", out_str);
-
 	global_pc = address + size;
 }
 
