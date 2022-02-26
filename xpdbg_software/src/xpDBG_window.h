@@ -8,6 +8,7 @@ public:
 	xpDBG_window(int   argc,
 				 char* argv[]);
 	virtual ~xpDBG_window();
+	Gtk::Box our_box;
 protected:
 	Gtk::ScrolledWindow sw;
 };

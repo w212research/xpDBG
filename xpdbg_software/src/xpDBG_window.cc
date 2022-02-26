@@ -72,6 +72,7 @@ void hook_code(uc_engine* uc,
 	asprintf(&disassembly_text, "%sr%d:\t0x%08x\n", disassembly_text, i, regs[i]); i++;
 	asprintf(&disassembly_text, "%sr%d:\t0x%08x\n", disassembly_text, i, regs[i]); i++;
 	asprintf(&disassembly_text, "%sr%d:\t0x%08x\n", disassembly_text, i, regs[i]); i++;
+	asprintf(&disassembly_text, "%s\n\n\n", disassembly_text);
 
 	asprintf(&disassembly_text,
 			 "%s" DISASSEMBLY_STR "\n",
@@ -279,8 +280,10 @@ xpDBG_window::xpDBG_window(int   argc,
 	sw.add(*our_text_view);
 	sw.show_all_children();
 
+	our_box.pack_start(sw);
+
 	xpdbg_log(LOG_VERBOSE, "Adding ScrolledWinow...");
-	add(sw);
+	add(our_box);
 
 	xpdbg_log(LOG_VERBOSE, "Showing...");
 	show_all_children();
