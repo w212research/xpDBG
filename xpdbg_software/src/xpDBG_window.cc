@@ -105,7 +105,7 @@ void xpDBG_window::step_clicked() {
 
 xpDBG_window::xpDBG_window(int   argc,
 						   char* argv[]) {
-	char*      filename;
+	char*      filename = NULL;
 	uc_hook    hook1;
 	size_t     count;
 	cs_insn*   insn;
@@ -183,8 +183,8 @@ xpDBG_window::xpDBG_window(int   argc,
 	}
 
 	set_title("Disassembly");
-	set_default_size(640,
-					 480);
+	set_default_size(800,
+					 600);
 
 	/*
 	 *  create a TextView for the disassembly, as well as a TextBuffer for
@@ -287,7 +287,8 @@ xpDBG_window::xpDBG_window(int   argc,
 	 */
 	xpdbg_log(LOG_VERBOSE, "Initializing ScrolledWindow.");
 
-	sw.set_policy(Gtk::POLICY_ALWAYS, Gtk::POLICY_ALWAYS);
+	sw.set_policy(Gtk::POLICY_NEVER, Gtk::POLICY_ALWAYS);
+	sw.set_propagate_natural_width(true);
 	sw.set_border_width(10);
 
 	xpdbg_log(LOG_VERBOSE, "Adding TextView.");
@@ -300,9 +301,31 @@ xpDBG_window::xpDBG_window(int   argc,
 	reg_view.set_editable(false);
 	reg_view.set_monospace(true);
 
-	our_box.pack_start(sw);
-	our_box.pack_start(step_button);
-	our_box.pack_start(reg_view);
+	our_grid.attach(step_button, 0, 0);
+
+	our_grid.set_column_homogeneous(false);
+	our_grid.set_row_homogeneous(false);
+	our_grid.set_margin_right(0);
+	our_grid.set_margin_start(0);
+
+	button_box.pack_start(our_grid);
+
+	emu_box.pack_start(sw);
+	emu_box.pack_start(reg_view);
+
+	button_box.set_spacing(10);
+	button_box.set_center_widget(our_grid);
+
+	emu_box.set_spacing(10);
+	emu_box.set_homogeneous(true);
+
+	our_box.pack_start(button_box);
+	our_box.pack_start(emu_box);
+
+	button_box.set_spacing(10);
+
+	our_box.set_homogeneous(false);
+	our_box.set_border_width(10);
 
 	xpdbg_log(LOG_VERBOSE, "Adding ScrolledWinow...");
 	add(our_box);
