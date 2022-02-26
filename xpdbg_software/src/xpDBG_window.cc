@@ -21,6 +21,7 @@ uint8_t test_arm_thumb_code[] = {
 	0x00,0x00,						//  mov		r0,	r0
 };
 
+uc_engine* uc_global;
 csh handle;
 
 void hook_code(uc_engine* uc,
@@ -89,7 +90,6 @@ xpDBG_window::xpDBG_window(int   argc,
 	uint8_t*   buf;
 	size_t     len;
 	uc_err     err;
-	uc_engine* uc;
 	int        i;
 
 	xpdbg_log(LOG_INFO, "Landed in xpDBG_window.");
@@ -239,7 +239,7 @@ xpDBG_window::xpDBG_window(int   argc,
 	xpdbg_log(LOG_VERBOSE, "Opening Unicorn Engine...");
 	err = uc_open(UC_ARCH_ARM,
 				  UC_MODE_THUMB,
-				  &uc);
+				  &uc_global);
 	if (err) {
 		xpdbg_log(LOG_ERROR, "Failed on uc_open() with error returned: %u (%s)\n",
 				  err,
@@ -248,15 +248,15 @@ xpDBG_window::xpDBG_window(int   argc,
 	}
 
 	xpdbg_log(LOG_VERBOSE, "Mapping memory for emulation...");
-	uc_mem_map(uc, BASE_ADDY, 0x100000, UC_PROT_ALL);
+	uc_mem_map(uc_global, BASE_ADDY, 0x100000, UC_PROT_ALL);
 	xpdbg_log(LOG_VERBOSE, "Copying executable for emulation...");
-	uc_mem_write(uc, BASE_ADDY, buf, len);
+	uc_mem_write(uc_global, BASE_ADDY, buf, len);
 
 	xpdbg_log(LOG_VERBOSE, "Adding instruction hook for emulation...");
-	uc_hook_add(uc, &hook1, UC_HOOK_CODE, (void*)hook_code, NULL, BASE_ADDY, BASE_ADDY + len);
+	uc_hook_add(uc_global, &hook1, UC_HOOK_CODE, (void*)hook_code, NULL, BASE_ADDY, BASE_ADDY + len);
 
 	xpdbg_log(LOG_VERBOSE, "Beginning emulation...");
-	err = uc_emu_start(uc, BASE_ADDY | 1, BASE_ADDY + len, 0, 0);
+	err = uc_emu_start(uc_global, BASE_ADDY | 1, BASE_ADDY + len, 0, 0);
 	if (err) {
 		xpdbg_log(LOG_ERROR, "Failed on uc_emu_start() with error returned: %u\n",
 				  err);
@@ -294,5 +294,5 @@ xpDBG_window::~xpDBG_window() {
 	cs_close(&handle);
 
 	xpdbg_log(LOG_VERBOSE, "Closing Unicorn Engine...");
-	uc_close(uc);
+	uc_close(uc_global);
 }
