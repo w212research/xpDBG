@@ -92,14 +92,15 @@ void hook_code(uc_engine* uc,
 
 void xpDBG_window::step_clicked() {
 	uc_err err;
+	
 	xpdbg_log(LOG_VERBOSE, "Beginning emulation...");
+	uc_reg_read(uc_global, UC_ARM_REG_R15, &global_pc);
+
 	err = uc_emu_start(uc_global, global_pc | 1, -1, 0, 1);
 	if (err) {
 		xpdbg_log(LOG_ERROR, "Failed on uc_emu_start() with error returned: %u\n",
 				  err);
 	}
-
-	uc_reg_write(uc_global, UC_ARM_REG_R15, &global_pc);
 
 	reg_view.get_buffer()->set_text(out_str);
 }
