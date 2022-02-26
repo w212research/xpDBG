@@ -21,8 +21,11 @@ uint8_t test_arm_thumb_code[] = {
 	0x00,0x00,						//  mov		r0,	r0
 };
 
+uint32_t global_pc = 0;
 uc_engine* uc_global;
 csh handle;
+
+char* out_str = (char*)"";
 
 void hook_code(uc_engine* uc,
 			   uint64_t   address,
@@ -33,8 +36,9 @@ void hook_code(uc_engine* uc,
 	cs_insn* insn;
 
 	uc_mem_read(uc, address, instruction, size);
-
 	cs_disasm(handle, instruction, size, address, 0, &insn);
+
+	out_str = (char*)"";
 
 	int i = 0;
 	uc_reg_read(uc, UC_ARM_REG_R0, &regs[i++]);
@@ -54,32 +58,50 @@ void hook_code(uc_engine* uc,
 	uc_reg_read(uc, UC_ARM_REG_R14, &regs[i++]);
 	uc_reg_read(uc, UC_ARM_REG_R15, &regs[i++]);
 
-	i = 0;
-	asprintf(&disassembly_text, "%sRegisters:\n", disassembly_text);
-	asprintf(&disassembly_text, "%sr%d:\t0x%08x\n", disassembly_text, i, regs[i]); i++;
-	asprintf(&disassembly_text, "%sr%d:\t0x%08x\n", disassembly_text, i, regs[i]); i++;
-	asprintf(&disassembly_text, "%sr%d:\t0x%08x\n", disassembly_text, i, regs[i]); i++;
-	asprintf(&disassembly_text, "%sr%d:\t0x%08x\n", disassembly_text, i, regs[i]); i++;
-	asprintf(&disassembly_text, "%sr%d:\t0x%08x\n", disassembly_text, i, regs[i]); i++;
-	asprintf(&disassembly_text, "%sr%d:\t0x%08x\n", disassembly_text, i, regs[i]); i++;
-	asprintf(&disassembly_text, "%sr%d:\t0x%08x\n", disassembly_text, i, regs[i]); i++;
-	asprintf(&disassembly_text, "%sr%d:\t0x%08x\n", disassembly_text, i, regs[i]); i++;
-	asprintf(&disassembly_text, "%sr%d:\t0x%08x\n", disassembly_text, i, regs[i]); i++;
-	asprintf(&disassembly_text, "%sr%d:\t0x%08x\n", disassembly_text, i, regs[i]); i++;
-	asprintf(&disassembly_text, "%sr%d:\t0x%08x\n", disassembly_text, i, regs[i]); i++;
-	asprintf(&disassembly_text, "%sr%d:\t0x%08x\n", disassembly_text, i, regs[i]); i++;
-	asprintf(&disassembly_text, "%sr%d:\t0x%08x\n", disassembly_text, i, regs[i]); i++;
-	asprintf(&disassembly_text, "%sr%d:\t0x%08x\n", disassembly_text, i, regs[i]); i++;
-	asprintf(&disassembly_text, "%sr%d:\t0x%08x\n", disassembly_text, i, regs[i]); i++;
-	asprintf(&disassembly_text, "%sr%d:\t0x%08x\n", disassembly_text, i, regs[i]); i++;
-	asprintf(&disassembly_text, "%s\n\n\n", disassembly_text);
-
-	asprintf(&disassembly_text,
+	asprintf(&out_str,
 			 "%s" DISASSEMBLY_STR "\n",
-			 disassembly_text,
+			 out_str,
 			 (unsigned long long)insn[0].address,
 			 insn[0].mnemonic,
 			 insn[0].op_str);
+
+	i = 0;
+	asprintf(&out_str, "%sRegisters:\n", out_str);
+	asprintf(&out_str, "%sr%d:\t0x%08x\n", out_str, i, regs[i]); i++;
+	asprintf(&out_str, "%sr%d:\t0x%08x\n", out_str, i, regs[i]); i++;
+	asprintf(&out_str, "%sr%d:\t0x%08x\n", out_str, i, regs[i]); i++;
+	asprintf(&out_str, "%sr%d:\t0x%08x\n", out_str, i, regs[i]); i++;
+	asprintf(&out_str, "%sr%d:\t0x%08x\n", out_str, i, regs[i]); i++;
+	asprintf(&out_str, "%sr%d:\t0x%08x\n", out_str, i, regs[i]); i++;
+	asprintf(&out_str, "%sr%d:\t0x%08x\n", out_str, i, regs[i]); i++;
+	asprintf(&out_str, "%sr%d:\t0x%08x\n", out_str, i, regs[i]); i++;
+	asprintf(&out_str, "%sr%d:\t0x%08x\n", out_str, i, regs[i]); i++;
+	asprintf(&out_str, "%sr%d:\t0x%08x\n", out_str, i, regs[i]); i++;
+	asprintf(&out_str, "%sr%d:\t0x%08x\n", out_str, i, regs[i]); i++;
+	asprintf(&out_str, "%sr%d:\t0x%08x\n", out_str, i, regs[i]); i++;
+	asprintf(&out_str, "%sr%d:\t0x%08x\n", out_str, i, regs[i]); i++;
+	asprintf(&out_str, "%sr%d:\t0x%08x\n", out_str, i, regs[i]); i++;
+	asprintf(&out_str, "%sr%d:\t0x%08x\n", out_str, i, regs[i]); i++;
+	asprintf(&out_str, "%sr%d:\t0x%08x\n", out_str, i, regs[i]); i++;
+	asprintf(&out_str, "%s\n\n\n", out_str);
+
+	printf("%s\n", out_str);
+
+	global_pc = address + size;
+}
+
+void xpDBG_window::step_clicked() {
+	uc_err err;
+	xpdbg_log(LOG_VERBOSE, "Beginning emulation...");
+	err = uc_emu_start(uc_global, global_pc | 1, -1, 0, 1);
+	if (err) {
+		xpdbg_log(LOG_ERROR, "Failed on uc_emu_start() with error returned: %u\n",
+				  err);
+	}
+
+	uc_reg_write(uc_global, UC_ARM_REG_R15, &global_pc);
+
+	reg_view.get_buffer()->set_text(out_str);
 }
 
 xpDBG_window::xpDBG_window(int   argc,
@@ -256,13 +278,6 @@ xpDBG_window::xpDBG_window(int   argc,
 	xpdbg_log(LOG_VERBOSE, "Adding instruction hook for emulation...");
 	uc_hook_add(uc_global, &hook1, UC_HOOK_CODE, (void*)hook_code, NULL, BASE_ADDY, BASE_ADDY + len);
 
-	xpdbg_log(LOG_VERBOSE, "Beginning emulation...");
-	err = uc_emu_start(uc_global, BASE_ADDY | 1, BASE_ADDY + len, 0, 0);
-	if (err) {
-		xpdbg_log(LOG_ERROR, "Failed on uc_emu_start() with error returned: %u\n",
-				  err);
-	}
-
 	/*
 	 *  set the actual thing
 	 */
@@ -280,7 +295,15 @@ xpDBG_window::xpDBG_window(int   argc,
 	sw.add(*our_text_view);
 	sw.show_all_children();
 
+	step_button.set_label("step instruction");
+	step_button.signal_clicked().connect(sigc::mem_fun(*this, &xpDBG_window::step_clicked));
+
+	reg_view.set_editable(false);
+	reg_view.set_monospace(true);
+
 	our_box.pack_start(sw);
+	our_box.pack_start(step_button);
+	our_box.pack_start(reg_view);
 
 	xpdbg_log(LOG_VERBOSE, "Adding ScrolledWinow...");
 	add(our_box);

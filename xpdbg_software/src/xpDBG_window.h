@@ -8,9 +8,12 @@ public:
 	xpDBG_window(int   argc,
 				 char* argv[]);
 	virtual ~xpDBG_window();
+	Gtk::ScrolledWindow sw;
+	Gtk::Button step_button;
 	Gtk::Box our_box;
 protected:
-	Gtk::ScrolledWindow sw;
+	Gtk::TextView reg_view;
+	void step_clicked();
 };
 
 #endif
