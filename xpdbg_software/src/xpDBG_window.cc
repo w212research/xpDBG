@@ -92,7 +92,7 @@ void hook_code(uc_engine* uc,
 
 void xpDBG_window::step_clicked() {
 	uc_err err;
-	
+
 	xpdbg_log(LOG_VERBOSE, "Beginning emulation...");
 	uc_reg_read(uc_global, UC_ARM_REG_R15, &global_pc);
 
