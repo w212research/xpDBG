@@ -1,5 +1,7 @@
 #include <unicorn/unicorn.h>
+#include "macros.h"
 #include "state.h"
+#include "armv7.h"
 #include <cstdio>
 
 #define BASE_ADDY 0x0
@@ -20,43 +22,16 @@ void hook_code(uc_engine*   uc,
 			   void*        user_data) {
 	uint32_t regs[16];
 
-	int i = 0;
-	uc_reg_read(uc, UC_ARM_REG_R0, &regs[i++]);
-	uc_reg_read(uc, UC_ARM_REG_R1, &regs[i++]);
-	uc_reg_read(uc, UC_ARM_REG_R2, &regs[i++]);
-	uc_reg_read(uc, UC_ARM_REG_R3, &regs[i++]);
-	uc_reg_read(uc, UC_ARM_REG_R4, &regs[i++]);
-	uc_reg_read(uc, UC_ARM_REG_R5, &regs[i++]);
-	uc_reg_read(uc, UC_ARM_REG_R6, &regs[i++]);
-	uc_reg_read(uc, UC_ARM_REG_R7, &regs[i++]);
-	uc_reg_read(uc, UC_ARM_REG_R8, &regs[i++]);
-	uc_reg_read(uc, UC_ARM_REG_R9, &regs[i++]);
-	uc_reg_read(uc, UC_ARM_REG_R10, &regs[i++]);
-	uc_reg_read(uc, UC_ARM_REG_R11, &regs[i++]);
-	uc_reg_read(uc, UC_ARM_REG_R12, &regs[i++]);
-	uc_reg_read(uc, UC_ARM_REG_R13, &regs[i++]);
-	uc_reg_read(uc, UC_ARM_REG_R14, &regs[i++]);
-	uc_reg_read(uc, UC_ARM_REG_R15, &regs[i++]);
-
-	i = 0;
+	for (int i = 0; i < len_of(armv7_regs); i++) {
+		uc_reg_read(uc, armv7_regs[i], &regs[i]);
+	}
 
 	printf("Register all the things!\n");
-	printf("0x%08x\n", regs[i++]);
-	printf("0x%08x\n", regs[i++]);
-	printf("0x%08x\n", regs[i++]);
-	printf("0x%08x\n", regs[i++]);
-	printf("0x%08x\n", regs[i++]);
-	printf("0x%08x\n", regs[i++]);
-	printf("0x%08x\n", regs[i++]);
-	printf("0x%08x\n", regs[i++]);
-	printf("0x%08x\n", regs[i++]);
-	printf("0x%08x\n", regs[i++]);
-	printf("0x%08x\n", regs[i++]);
-	printf("0x%08x\n", regs[i++]);
-	printf("0x%08x\n", regs[i++]);
-	printf("0x%08x\n", regs[i++]);
-	printf("0x%08x\n", regs[i++]);
-	printf("0x%08x\n", regs[i++]);
+	for (int i = 0; i < len_of(armv7_regs); i++) {
+		uc_reg_read(uc, armv7_regs[i], &regs[i]);
+		printf("%s:\t0x%08x\n", armv7_reg_string_normal[i], regs[i]);
+	}
+
 	getchar();
 }
 
