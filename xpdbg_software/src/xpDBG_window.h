@@ -16,6 +16,7 @@ protected:
 	Gtk::Grid our_grid;
 	Gtk::Box emu_box;
 	Gtk::Box our_box;
+
 	void step_clicked();
 };
 
