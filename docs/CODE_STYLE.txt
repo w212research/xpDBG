@@ -1,0 +1,38 @@
+                _ _
+__  ___ __   __| | |__   __ _
+\ \/ / '_ \ / _` | '_ \ / _` |
+ >  <| |_) | (_| | |_) | (_| |
+/_/\_\ .__/ \__,_|_.__/ \__, |
+     |_|                |___/
+
+Code Style
+
+xpDBG is written in "C-Style C++". In other words, while using some C++
+features, many programming techniques used in C applications are implemented.
+
+For example, not much usage is made of `std::string`: `char*` is more often
+used.
+
+For another example, `malloc`, `free`, `realloc`, and such, are used frequently
+instead of C++-style methods for memory allocation, or resizable list/array-type
+objects (see note 1), such as `vector`s.
+
+C++ features are mostly used when I am reasonably familiar with them, which, to
+be honest, is not often. I'm honestly mostly a C programmer, who writes some C++
+at times.
+
+In terms of the actual style of code that is written, formatting-wise, here are
+some basic guidelines:
+	- Don't make the lines too long. I personally think that a cut-off at 80
+	  columns is a bit stupid: after all, terminals are resizable nowadays,
+	  and even in full CLI setups, you probably aren't operating at VGA-style
+	  80x25 "resolutions". Use common sense, if a line is too long, you can
+	  probably tell.
+
+	- Please, for the love of God, put your braces on the same line. It's
+	  objectively wrong any other way and the truth will not change on this
+	  subjective issue.
+
+	- 4 spaces per tab.
+
+	- Anymore I think of will be added.
