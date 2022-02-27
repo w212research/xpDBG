@@ -18,7 +18,7 @@ For example:
 	  one of my least favorite languages.
 	- IDA (Pro): expensive, closed source, does not have emulation support,
 	  or code editing
-	- Radare2: does not have emulation support, or code editing
+	- Radare2: does not have emulation support, or code editing.
 
 Planned features include:
 	- support for multiple architectures
