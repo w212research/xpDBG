@@ -105,15 +105,15 @@ void xpDBG_window::step_clicked() {
 
 xpDBG_window::xpDBG_window(int   argc,
 						   char* argv[]) {
-	char*    filename = NULL;
-	char*    name_str = NULL;
-	uc_hook  hook1;
-	size_t   count;
+	char* filename = NULL;
+	char* name_str = NULL;
+	uc_hook hook1;
 	cs_insn* insn;
+	size_t count;
 	uint8_t* buf;
-	size_t   len;
-	uc_err   err;
-	int      i;
+	size_t len;
+	uc_err err;
+	int i;
 
 	xpdbg_log(LOG_INFO, "Landed in xpDBG_window.");
 	xpdbg_log(LOG_INFO, "Asking for file for disassembly...");
