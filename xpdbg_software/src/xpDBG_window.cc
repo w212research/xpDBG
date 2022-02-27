@@ -289,7 +289,6 @@ xpDBG_window::xpDBG_window(int   argc,
 
 	sw.set_policy(Gtk::POLICY_NEVER, Gtk::POLICY_ALWAYS);
 	sw.set_propagate_natural_width(true);
-	sw.set_border_width(10);
 
 	xpdbg_log(LOG_VERBOSE, "Adding TextView.");
 	sw.add(*our_text_view);
