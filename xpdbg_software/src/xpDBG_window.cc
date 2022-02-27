@@ -183,7 +183,10 @@ xpDBG_window::xpDBG_window(int   argc,
 		fclose(fp);
 	}
 
-	asprintf(&name_str, "xpDBG - %s", (filename != NULL) ? filename : "default THUMB test code");
+	asprintf(&name_str,
+			 "xpDBG - %s",
+			 (filename != NULL) ? filename
+			 					: "default THUMB test code");
 
 	set_title(name_str);
 	set_default_size(800,
