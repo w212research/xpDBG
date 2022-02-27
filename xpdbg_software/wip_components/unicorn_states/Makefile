@@ -5,7 +5,7 @@ all: bin/main
 	#
 
 create_folders:
-	sh -c "rm -rf bin; mkdir bin"
+	sh -c "rm -rf bin; mkdir bin; mkdir bin/armv7"
 
 clean: create_folders
 

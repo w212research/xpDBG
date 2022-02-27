@@ -1,8 +1,9 @@
 #include <unicorn/unicorn.h>
+#include "armv7/state.h"
+#include "armv7/armv7.h"
 #include "macros.h"
-#include "state.h"
-#include "armv7.h"
-#include <cstdio>
+#include <string.h>
+#include <stdio.h>
 
 #define BASE_ADDY 0x0
 
@@ -14,7 +15,7 @@ uint8_t test_arm_thumb_code[] = {
 	0x01,0x44,						//	add		r1,	r1,	r0
 };
 
-armv7_state_change_t* states = NULL;
+armv7_history_t history;
 
 void hook_code(uc_engine*   uc,
 			   uint64_t     address,
@@ -22,17 +23,25 @@ void hook_code(uc_engine*   uc,
 			   void*        user_data) {
 	uint32_t regs[16];
 
+	armv7_state_t current_state;
+
 	for (int i = 0; i < len_of(armv7_regs); i++) {
 		uc_reg_read(uc, armv7_regs[i], &regs[i]);
+		current_state.reg_state.regs[i] = regs[i];
 	}
 
+#if 0
 	printf("Register all the things!\n");
 	for (int i = 0; i < len_of(armv7_regs); i++) {
 		uc_reg_read(uc, armv7_regs[i], &regs[i]);
 		printf("%s:\t0x%08x\n", armv7_reg_string_normal[i], regs[i]);
 	}
+#endif
 
-	getchar();
+	memcpy(&history.states[history.position], &current_state, sizeof(current_state));
+
+	history.length++;
+	history.position++;
 }
 
 int main(int	argc,
@@ -42,7 +51,11 @@ int main(int	argc,
 	uc_hook		hook1;
 	uc_err		err;
 
-	states = (armv7_state_change_t*)calloc(0x1000, sizeof(armv7_state_change_t));
+	history.length = 0;
+	history.allocated_elements = DEFAULT_LENGTH;
+	history.position = 0;
+	history.states = (armv7_state_t*)calloc(history.allocated_elements,
+											sizeof(armv7_state_t));
 
 	err = uc_open(UC_ARCH_ARM,
 				  UC_MODE_THUMB,
@@ -67,7 +80,18 @@ int main(int	argc,
 
     uc_close(uc);
 
-	free(states);
+	for (int i = 0; i < history.length; i++) {
+		printf("================================\n");
+		printf("armv7 state %d\n", i);
+		printf("================================\n");
+
+		printf("Registers:\n");
+		for (int j = 0; j < len_of(history.states[i].reg_state.regs); j++) {
+			printf("%s:\t0x%08x\n", armv7_reg_string_normal[i], history.states[i].reg_state.regs[j]);
+		}
+	}
+
+	free(history.states);
 
 	return 0;
 }
