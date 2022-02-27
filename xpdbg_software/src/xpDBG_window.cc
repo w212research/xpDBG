@@ -105,14 +105,15 @@ void xpDBG_window::step_clicked() {
 
 xpDBG_window::xpDBG_window(int   argc,
 						   char* argv[]) {
-	char*      filename = NULL;
-	uc_hook    hook1;
-	size_t     count;
-	cs_insn*   insn;
-	uint8_t*   buf;
-	size_t     len;
-	uc_err     err;
-	int        i;
+	char*    filename = NULL;
+	char*    name_str = NULL;
+	uc_hook  hook1;
+	size_t   count;
+	cs_insn* insn;
+	uint8_t* buf;
+	size_t   len;
+	uc_err   err;
+	int      i;
 
 	xpdbg_log(LOG_INFO, "Landed in xpDBG_window.");
 	xpdbg_log(LOG_INFO, "Asking for file for disassembly...");
@@ -182,7 +183,9 @@ xpDBG_window::xpDBG_window(int   argc,
 		fclose(fp);
 	}
 
-	set_title("Disassembly");
+	asprintf(&name_str, "xpDBG - %s", (filename != NULL) ? filename : "default THUMB test code");
+
+	set_title(name_str);
 	set_default_size(800,
 					 600);
 
