@@ -1,7 +1,7 @@
 CPP=clang++
 CPPFLAGS=--std=c++17
 
-all: clean bin/main
+all: bin/main
 
 create_folders:
 	sh -c "rm -rf bin; mkdir bin; mkdir bin/armv7"

@@ -1,7 +1,7 @@
 CPP=clang++
 CPPFLAGS=--std=c++17 `pkg-config gtkmm-3.0 --cflags`
 
-all: clean bin/main
+all: bin/main
 
 create_folders:
 	sh -c "rm -rf bin; mkdir bin"
