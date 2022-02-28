@@ -11,6 +11,8 @@ using namespace std;
 
 #define BASE_ADDY 0x0
 
+size_t len;
+
 char*   disassembly_text = NULL;
 uint8_t test_arm_thumb_code[] = {
 	0x41,0x20,						//	movs	r0,	#0x41
@@ -94,6 +96,19 @@ void xpDBG_window::step_clicked() {
 	xpdbg_log(LOG_VERBOSE, "Beginning emulation...");
 	uc_reg_read(uc_global, UC_ARM_REG_R15, &global_pc);
 
+	if (global_pc >= (BASE_ADDY + len)) {
+		Gtk::MessageDialog dialog(*this,
+								  "End of emulation",
+								  false,
+								  Gtk::MESSAGE_QUESTION,
+								  Gtk::BUTTONS_OK);
+		dialog.set_secondary_text("You have reached the end of the binary available for emulation.");
+
+		int result = dialog.run();
+
+		return;
+	}
+
 	err = uc_emu_start(uc_global, global_pc | 1, -1, 0, 1);
 	if (err) {
 		xpdbg_log(LOG_ERROR, "Failed on uc_emu_start() with error returned: %u\n",
@@ -111,7 +126,6 @@ xpDBG_window::xpDBG_window(int   argc,
 	cs_insn* insn;
 	size_t count;
 	uint8_t* buf;
-	size_t len;
 	uc_err err;
 	int i;
 
