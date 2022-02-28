@@ -314,33 +314,43 @@ xpDBG_window::xpDBG_window(int   argc,
 	sw.add(*our_text_view);
 	sw.show_all_children();
 
+	xpdbg_log(LOG_VERBOSE, "Initializing step button.");
 	step_button.set_label("step instruction");
 	step_button.signal_clicked().connect(sigc::mem_fun(*this, &xpDBG_window::step_clicked));
 
+	xpdbg_log(LOG_VERBOSE, "Initializing Register View.");
 	reg_view.set_editable(false);
 	reg_view.set_monospace(true);
 
+	xpdbg_log(LOG_VERBOSE, "Attaching step button.");
 	our_grid.attach(step_button, 0, 0);
 
+	xpdbg_log(LOG_VERBOSE, "Initializing grid.");
 	our_grid.set_column_homogeneous(false);
 	our_grid.set_row_homogeneous(false);
 	our_grid.set_margin_right(0);
 	our_grid.set_margin_start(0);
 
+	xpdbg_log(LOG_VERBOSE, "Packing button grid into button box.");
 	button_box.pack_start(our_grid);
 
+	xpdbg_log(LOG_VERBOSE, "Packing ScrolledWindow & Register View into emulation box.");
 	emu_box.pack_start(sw);
 	emu_box.pack_start(reg_view);
 
+	xpdbg_log(LOG_VERBOSE, "Initializing button box.");
 	button_box.set_spacing(10);
 	button_box.set_center_widget(our_grid);
 
+	xpdbg_log(LOG_VERBOSE, "Initializing emulation box.");
 	emu_box.set_spacing(10);
 	emu_box.set_homogeneous(true);
 
+	xpdbg_log(LOG_VERBOSE, "Packing button box and emulation box into main box.");
 	our_box.pack_start(button_box);
 	our_box.pack_start(emu_box);
 
+	xpdbg_log(LOG_VERBOSE, "Initializing main box.");
 	our_box.set_homogeneous(false);
 	our_box.set_border_width(10);
 
