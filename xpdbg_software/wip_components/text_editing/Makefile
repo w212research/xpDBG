@@ -10,7 +10,7 @@ create_folders:
 clean: create_folders
 
 bin/main: bin/main.o bin/logging.o bin/xpDBG_window.o
-	${CPP} ${CPPFLAGS} `pkg-config gtkmm-3.0 --cflags --libs` $^ -o $@
+	${CPP} ${CPPFLAGS} `pkg-config gtkmm-3.0 --libs` $^ -o $@
 
 bin/%.o: src/%.cc
 	${CPP} ${CPPFLAGS} $< -c -o $@
