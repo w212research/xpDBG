@@ -341,8 +341,6 @@ xpDBG_window::xpDBG_window(int   argc,
 	our_box.pack_start(button_box);
 	our_box.pack_start(emu_box);
 
-	button_box.set_spacing(10);
-
 	our_box.set_homogeneous(false);
 	our_box.set_border_width(10);
 
