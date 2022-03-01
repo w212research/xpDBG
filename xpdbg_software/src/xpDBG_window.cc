@@ -270,6 +270,17 @@ xpDBG_window::xpDBG_window(int   argc,
 		 */
 		cs_free(insn,
 				count);
+	} else {
+		Gtk::MessageDialog dialog(*this,
+								  "Disassembly failed / no disassembly available.",
+								  false,
+								  Gtk::MESSAGE_QUESTION,
+								  Gtk::BUTTONS_OK);
+		dialog.set_secondary_text("No disassembly was completed.");
+
+		int result = dialog.run();
+
+		return;
 	}
 
 	asprintf(&disassembly_text, "%s\n\n\n",
