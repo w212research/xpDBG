@@ -1,12 +1,13 @@
 CPP=clang++
 CPPFLAGS=--std=c++17
 
-all: bin/main
+all: bin bin/main
 
-create_folders:
-	sh -c "rm -rf bin; mkdir bin; mkdir bin/armv7"
+bin:
+	sh -c "mkdir bin"
 
-clean: create_folders
+clean:
+	rm -rf bin
 
 bin/main: bin/main.o
 	${CPP} ${CPPFLAGS} -lcapstone -lunicorn $^ -o $@
