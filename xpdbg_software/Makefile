@@ -1,12 +1,13 @@
 CPP=clang++
 CPPFLAGS=--std=c++17 `pkg-config gtkmm-3.0 --cflags`
 
-all: bin/main
+all: bin bin/main
 
-create_folders:
-	sh -c "rm -rf bin; mkdir bin"
+bin:
+	sh -c "mkdir bin"
 
-clean: create_folders
+clean:
+	rm -rf bin
 
 bin/main: bin/main.o bin/logging.o bin/xpDBG_window.o
 	${CPP} ${CPPFLAGS} `pkg-config gtkmm-3.0 --libs` -lcapstone -lunicorn $^ -o $@
