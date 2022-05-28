@@ -1,6 +1,7 @@
 #include "logging.h"
 #include <cstdarg>
 #include <cstring>
+#include <cstdlib>
 #include <cstdio>
 #include <ctime>
 
@@ -57,6 +58,8 @@ log_status_t xpdbg_log(log_level_t log_level,
 			   s_to_print);
 
 		va_end(args);
+
+		free(s_to_print);
 
 		return LOG_SUCCESS;
 	}
