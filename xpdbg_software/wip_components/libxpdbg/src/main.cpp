@@ -31,23 +31,23 @@ public:
 };
 
 class Test1 : public Base {
-public:
-	void print() {
-		this->str1 = "Hello, world! str1";
-		printf("%s\n", this->str1);
-	}
-private:
-	char* str1;
+	public:
+		void print() {
+			this->str1 = "Hello, world! str1";
+			printf("%s\n", this->str1);
+		}
+	protected:
+		char* str1;
 };
 
 class Test2 : public Base {
-public:
-	void print() {
-		this->str2 = "Hello, world! str2";
-		printf("%s\n", this->str2);
-	}
-private:
-	char* str2;
+	public:
+		void print() {
+			this->str2 = "Hello, world! str2";
+			printf("%s\n", this->str2);
+		}
+	protected:
+		char* str2;
 };
 
 int main(int argc, char* argv[]) {

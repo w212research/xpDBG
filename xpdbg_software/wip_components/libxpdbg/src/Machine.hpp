@@ -18,17 +18,16 @@
 #ifndef MACHINE_HPP
 #define MACHINE_HPP
 
-#if 0
 namespace libxpdbg {
 	class MachineInternal {
-
+		public:
+		
 	}
 
 	class Machine {
-private:
-		MachineInternal internal_machine;
+		protected:
+			MachineInternal internal_machine;
 	};
 }
-#endif
 
 #endif
