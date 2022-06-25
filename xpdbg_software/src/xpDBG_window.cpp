@@ -250,11 +250,6 @@ xpDBG_window::xpDBG_window(int   argc,
 	 */
 	xpdbg_log(LOG_INFO, "Formatting disassembly...");
 
-#if 0
-	asprintf(&disassembly_text,
-			 "");
-#endif
-
 	disassembly_text_str = "";
 
 	/*
@@ -266,14 +261,6 @@ xpDBG_window::xpDBG_window(int   argc,
 													   (unsigned long long)insn[i].address,
 													   insn[i].mnemonic,
 													   insn[i].op_str);
-#if 0
-			asprintf(&disassembly_text,
-					 "%s" DISASSEMBLY_STR "\n",
-					 disassembly_text,
-					 (unsigned long long)insn[i].address,
-					 insn[i].mnemonic,
-					 insn[i].op_str);
-#endif
 		}
 
 		/*
@@ -295,11 +282,6 @@ xpDBG_window::xpDBG_window(int   argc,
 	}
 
 	disassembly_text_str += "\n\n\n";
-
-#if 0
-	asprintf(&disassembly_text, "%s\n\n\n",
-			 disassembly_text);
-#endif
 
 	disassembly_text = (char*)disassembly_text_str.c_str();
 
