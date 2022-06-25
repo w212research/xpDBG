@@ -5,12 +5,12 @@ __  ___ __   __| | |__   __ _
 /_/\_\ .__/ \__,_|_.__/ \__, |
      |_|                |___/
 
-	- xpdbg.org
+	- xpDBG.org
 
-What is xpdbg?
-xpdbg is a project to create a cross platform debugger, code editor, and general
+What is xpDBG?
+xpDBG is a project to create a cross platform debugger, code editor, and general
 development environment, targeting lower level development.
-The xpdbg project also includes the desire to create a better piece of software
+The xpDBG project also includes the desire to create a better piece of software
 for reverse engineering, as all of them have their own problems.
 For example:
 	- Cutter: not very featureful, essentially a radare2 GUI, doesn't have
