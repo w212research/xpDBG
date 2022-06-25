@@ -27,6 +27,10 @@ int main(int argc, char* argv[]) {
 	cout << "Interpreter: " << binary->interpreter() << '\n';
 	cout << "== Header ==" << '\n';
 	cout << binary->header() << '\n';
+	cout << "== Sections ==" << '\n';
+	for (const LIEF::ELF::Section& section : binary->sections()) {
+		cout << section << '\n';
+	}
 
 	return 0;
 }
