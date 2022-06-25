@@ -1,0 +1,13 @@
+                _ _
+__  ___ __   __| | |__   __ _
+\ \/ / '_ \ / _` | '_ \ / _` |
+ >  <| |_) | (_| | |_) | (_| |
+/_/\_\ .__/ \__,_|_.__/ \__, |
+     |_|                |___/
+
+Notes
+
+A lot of the docs so far are written in a first-person perspective, which made
+sense when this was a personal project, but as it is technically now a w²¹²
+research project, "we" is more appropriate than "I", or at least ~~I~~we'd like
+it to be. ~~I~~we'll do our best.
