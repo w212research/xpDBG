@@ -124,6 +124,7 @@ void xpDBG_window::step_clicked() {
 
 xpDBG_window::xpDBG_window(int   argc,
 						   char* argv[]) {
+	string disassembly_text_str;
 	char* filename = NULL;
 	uc_hook hook1;
 	cs_insn* insn;
@@ -249,20 +250,30 @@ xpDBG_window::xpDBG_window(int   argc,
 	 */
 	xpdbg_log(LOG_INFO, "Formatting disassembly...");
 
+#if 0
 	asprintf(&disassembly_text,
 			 "");
+#endif
+
+	disassembly_text_str = "";
 
 	/*
 	 *  format it
 	 */
 	if (count > 0) {
 		for (i = 0; i < count; i++) {
+			disassembly_text_str += string_format_cstr(DISASSEMBLY_STR "\n",
+													   (unsigned long long)insn[i].address,
+													   insn[i].mnemonic,
+													   insn[i].op_str);
+#if 0
 			asprintf(&disassembly_text,
 					 "%s" DISASSEMBLY_STR "\n",
 					 disassembly_text,
 					 (unsigned long long)insn[i].address,
 					 insn[i].mnemonic,
 					 insn[i].op_str);
+#endif
 		}
 
 		/*
@@ -283,8 +294,14 @@ xpDBG_window::xpDBG_window(int   argc,
 		return;
 	}
 
+	disassembly_text_str += "\n\n\n";
+
+#if 0
 	asprintf(&disassembly_text, "%s\n\n\n",
 			 disassembly_text);
+#endif
+
+	disassembly_text = (char*)disassembly_text_str.c_str();
 
 	/*
 	 *  open unicorn engine
