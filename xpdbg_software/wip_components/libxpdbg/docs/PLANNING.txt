@@ -1,0 +1,36 @@
+```
+				_ _
+__  ___ __   __| | |__   __ _
+\ \/ / '_ \ / _` | '_ \ / _` |
+ >  <| |_) | (_| | |_) | (_| |
+/_/\_\ .__/ \__,_|_.__/ \__, |
+	 |_|                |___/
+```
+
+Planning
+
+I think the goal for libxpdbg will be to have a centralized API for machine
+control and such. Trying to figure out how to structure the API though.
+
+I will probably structure it in a rather object-oriented fashion, i.e. you will
+create a blank machine object, then populate the blank object with a machine
+definition. For example, a machine definition could contain a description of
+the hardware of a Commodore 64. Include a (or specify a builtin) emulator for
+the 6502, SID, etc, provide the framebuffer, etc. Then, you could create a blank
+machine, then populate it with that C64 machine definition, and load a ROM of
+the C64's builtin "OS", or what have you.
+
+Or, a machine definition could contain a description of the hardware of a
+TI-84 Plus. Provide a (or specify a builtin) emulator for the Z80, and other
+hardware. You could then populate a blank machine with that definition.
+
+Software like xpDBG then can use these machine definitions to support a wide
+variety of hardware-types, without needing its developers to include specific
+support for it. Someone who wants to debug a different, obscure hardware
+platform with xpDBG wouldn't have much of a choice otherwise, because it's such
+an obscure platform that no development teams have supported it. (or it's a new
+platform that the person would have to develop the tools for themselves. )
+Instead, they can just create a machine definition for this obscure hardware,
+and use the machine definition with xpDBG. xpDBG doesn't have to include support
+for this hardware, and the developers may never even know of it, but it can
+still interface with, and accurately emulate, and work with, this hardware.
