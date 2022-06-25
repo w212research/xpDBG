@@ -5,6 +5,8 @@ __  ___ __   __| | |__   __ _
 /_/\_\ .__/ \__,_|_.__/ \__, |
      |_|                |___/
 
+	- xpdbg.org
+
 What is xpdbg?
 xpdbg is a project to create a cross platform debugger, code editor, and general
 development environment, targeting lower level development.
