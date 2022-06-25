@@ -25,6 +25,31 @@
 
 uc_engine* uc_global;
 
+class Base {
+public:
+	virtual void print() = 0;
+};
+
+class Test1 : public Base {
+public:
+	void print() {
+		this->str1 = "Hello, world! str1";
+		printf("%s\n", this->str1);
+	}
+private:
+	char* str1;
+};
+
+class Test2 : public Base {
+public:
+	void print() {
+		this->str2 = "Hello, world! str2";
+		printf("%s\n", this->str2);
+	}
+private:
+	char* str2;
+};
+
 int main(int argc, char* argv[]) {
 	uc_err err;
 
@@ -43,9 +68,15 @@ int main(int argc, char* argv[]) {
 
 	uc_close(uc_global);
 
-	libxpdbg::Machine machine;
+//	libxpdbg::Machine machine;
 
-	machine.hello();
+//	machine.hello();
+
+	Test1 test1;
+	Test2 test2;
+
+	test1.print();
+	test2.print();
 
 	return 0;
 }

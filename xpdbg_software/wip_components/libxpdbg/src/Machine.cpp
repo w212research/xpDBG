@@ -21,8 +21,10 @@
 #include "Machine.hpp"
 #include <cstdio>
 
+#if 0
 using namespace libxpdbg;
 
 void libxpdbg::Machine::hello() {
 	printf("Hello, world!\n");
 }
+#endif
