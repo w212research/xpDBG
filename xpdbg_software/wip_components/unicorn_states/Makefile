@@ -12,5 +12,5 @@ clean:
 bin/main: bin/main.o
 	${CPP} ${CPPFLAGS} -lcapstone -lunicorn $^ -o $@
 
-bin/%.o: src/%.cc
+bin/%.o: src/%.cpp
 	${CPP} ${CPPFLAGS} $< -c -o $@
