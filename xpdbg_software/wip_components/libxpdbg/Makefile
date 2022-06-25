@@ -10,7 +10,7 @@ clean:
 	rm -rf bin
 
 bin/main: bin/main.o
-	${CPP} ${CPPFLAGS} -lLIEF $^ -o $@
+	${CPP} ${CPPFLAGS} -lLIEF -lunicorn -lcapstone $^ -o $@
 
 bin/%.o: src/%.cpp
 	${CPP} ${CPPFLAGS} $< -c -o $@
