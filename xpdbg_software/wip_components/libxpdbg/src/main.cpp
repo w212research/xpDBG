@@ -17,6 +17,7 @@
 
 #include <capstone/capstone.h>
 #include <unicorn/unicorn.h>
+#include "ARMv7Machine.hpp"
 #include <LIEF/LIEF.hpp>
 #include "libxpdbg.hpp"
 #include <cstdio>
@@ -77,6 +78,8 @@ int main(int argc, char* argv[]) {
 
 	test1.print();
 	test2.print();
+
+	libxpdbg::ARMv7Machine armv7_machine;
 
 	return 0;
 }

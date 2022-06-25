@@ -9,7 +9,7 @@ bin:
 clean:
 	rm -rf bin
 
-bin/main: bin/main.o bin/Machine.o
+bin/main: bin/main.o bin/Machine.o bin/ARMv7Machine.o
 	${CPP} ${CPPFLAGS} -lLIEF -lunicorn -lcapstone $^ -o $@
 
 bin/%.o: src/%.cpp

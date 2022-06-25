@@ -18,12 +18,20 @@
 #ifndef LIBXPDBG_HPP
 #define LIBXPDBG_HPP
 
-namespace libxpdbg {
-	/*
-	 *  empty
-	 */
-}
-
+#include "libxpdbg.hpp"
 #include "Machine.hpp"
+#include <vector>
+
+namespace libxpdbg {
+	class ARMv7Machine : public Machine {
+		public:
+			ARMv7Machine();
+			~ARMv7Machine();
+			std::vector<reg_t> get_registers();
+		protected:
+			uc_engine		   *uc;
+			std::vector<reg_t>	registers;
+	};
+}
 
 #endif

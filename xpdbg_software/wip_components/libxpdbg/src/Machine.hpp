@@ -18,15 +18,21 @@
 #ifndef MACHINE_HPP
 #define MACHINE_HPP
 
+#include <cstdint>
+#include <vector>
+#include <string>
+
 namespace libxpdbg {
-	class MachineInternal {
-		public:
-		
-	}
+	typedef struct {
+		std::string reg_name;
+		std::string reg_description;
+		uint64_t reg_id;
+		uint64_t reg_value;
+	} reg_t;
 
 	class Machine {
-		protected:
-			MachineInternal internal_machine;
+		public:
+			virtual std::vector<reg_t> get_registers() = 0;
 	};
 }
 
