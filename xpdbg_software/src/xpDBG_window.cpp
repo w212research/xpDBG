@@ -125,7 +125,6 @@ void xpDBG_window::step_clicked() {
 xpDBG_window::xpDBG_window(int   argc,
 						   char* argv[]) {
 	char* filename = NULL;
-	char* name_str = NULL;
 	uc_hook hook1;
 	cs_insn* insn;
 	size_t count;
@@ -201,12 +200,9 @@ xpDBG_window::xpDBG_window(int   argc,
 		fclose(fp);
 	}
 
-	asprintf(&name_str,
-			 "xpDBG - %s",
-			 (filename != NULL) ? filename
-			 					: "default THUMB test code");
-
-	set_title(name_str);
+	set_title(string_format_cstr("xpDBG - %s",
+								 (filename != NULL) ? filename
+			 										: "default THUMB test code").c_str());
 	set_default_size(800,
 					 600);
 
