@@ -26,3 +26,5 @@ build
 
 # fuck macOS for this shit
 ._*
+
+.vscode

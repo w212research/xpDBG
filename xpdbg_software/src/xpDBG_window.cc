@@ -3,6 +3,7 @@
 #include "xpDBG_window.h"
 #include "logging.h"
 #include <gtkmm.h>
+#include "lib.h"
 
 using namespace std;
 
@@ -23,71 +24,73 @@ uint8_t test_arm_thumb_code[] = {
 	0x00, 0x00,						//  mov		r0,	r0
 };
 
-uint32_t global_pc = 0;
-uc_engine* uc_global;
-csh handle;
+uint32_t   global_pc = 0;
+uc_engine *uc_global;
+csh		   handle;
+
+uc_arm_reg dump_regs[] = {
+	UC_ARM_REG_R0,
+	UC_ARM_REG_R1,
+	UC_ARM_REG_R2,
+	UC_ARM_REG_R3,
+	UC_ARM_REG_R4,
+	UC_ARM_REG_R5,
+	UC_ARM_REG_R6,
+	UC_ARM_REG_R7,
+	UC_ARM_REG_R8,
+	UC_ARM_REG_R9,
+	UC_ARM_REG_R10,
+	UC_ARM_REG_R11,
+	UC_ARM_REG_R12,
+	UC_ARM_REG_R13,
+	UC_ARM_REG_R14,
+	UC_ARM_REG_R15,
+};
 
 char* out_str = (char*)"";
 
-void hook_code(uc_engine* uc,
-			   uint64_t   address,
-			   uint32_t   size,
-			   void*      user_data) {
-	uint8_t  instruction[size];
+char* format_uc(uc_engine* uc) {
+	uint8_t	 instruction[4];
 	uint32_t regs[16];
-	cs_insn* insn;
+	uint32_t address;
+	cs_insn	*insn;
+	string	 str;
+	char	*ret;
 
-	uc_mem_read(uc, address, instruction, size);
-	cs_disasm(handle, instruction, size, address, 0, &insn);
+	uc_reg_read(uc, UC_ARM_REG_PC, &address);
 
-	out_str = (char*)"";
+	uc_mem_read(uc,
+				address,
+				instruction,
+				4);
 
-	int i = 0;
-	uc_reg_read(uc, UC_ARM_REG_R0, &regs[i++]);
-	uc_reg_read(uc, UC_ARM_REG_R1, &regs[i++]);
-	uc_reg_read(uc, UC_ARM_REG_R2, &regs[i++]);
-	uc_reg_read(uc, UC_ARM_REG_R3, &regs[i++]);
-	uc_reg_read(uc, UC_ARM_REG_R4, &regs[i++]);
-	uc_reg_read(uc, UC_ARM_REG_R5, &regs[i++]);
-	uc_reg_read(uc, UC_ARM_REG_R6, &regs[i++]);
-	uc_reg_read(uc, UC_ARM_REG_R7, &regs[i++]);
-	uc_reg_read(uc, UC_ARM_REG_R8, &regs[i++]);
-	uc_reg_read(uc, UC_ARM_REG_R9, &regs[i++]);
-	uc_reg_read(uc, UC_ARM_REG_R10, &regs[i++]);
-	uc_reg_read(uc, UC_ARM_REG_R11, &regs[i++]);
-	uc_reg_read(uc, UC_ARM_REG_R12, &regs[i++]);
-	uc_reg_read(uc, UC_ARM_REG_R13, &regs[i++]);
-	uc_reg_read(uc, UC_ARM_REG_R14, &regs[i++]);
-	uc_reg_read(uc, UC_ARM_REG_R15, &regs[i++]);
+	cs_disasm(handle,
+			  instruction,
+			  4,
+			  address,
+			  1,
+			  &insn);
 
-	asprintf(&out_str,
-			 "%s" DISASSEMBLY_STR "\n",
-			 out_str,
-			 (unsigned long long)insn[0].address,
-			 insn[0].mnemonic,
-			 insn[0].op_str);
+	ret = (char*)"";
 
-	i = 0;
-	asprintf(&out_str, "%sRegisters:\n", out_str);
-	asprintf(&out_str, "%sr%d:\t0x%08x\n", out_str, i, regs[i]); i++;
-	asprintf(&out_str, "%sr%d:\t0x%08x\n", out_str, i, regs[i]); i++;
-	asprintf(&out_str, "%sr%d:\t0x%08x\n", out_str, i, regs[i]); i++;
-	asprintf(&out_str, "%sr%d:\t0x%08x\n", out_str, i, regs[i]); i++;
-	asprintf(&out_str, "%sr%d:\t0x%08x\n", out_str, i, regs[i]); i++;
-	asprintf(&out_str, "%sr%d:\t0x%08x\n", out_str, i, regs[i]); i++;
-	asprintf(&out_str, "%sr%d:\t0x%08x\n", out_str, i, regs[i]); i++;
-	asprintf(&out_str, "%sr%d:\t0x%08x\n", out_str, i, regs[i]); i++;
-	asprintf(&out_str, "%sr%d:\t0x%08x\n", out_str, i, regs[i]); i++;
-	asprintf(&out_str, "%sr%d:\t0x%08x\n", out_str, i, regs[i]); i++;
-	asprintf(&out_str, "%sr%d:\t0x%08x\n", out_str, i, regs[i]); i++;
-	asprintf(&out_str, "%sr%d:\t0x%08x\n", out_str, i, regs[i]); i++;
-	asprintf(&out_str, "%sr%d:\t0x%08x\n", out_str, i, regs[i]); i++;
-	asprintf(&out_str, "%sr%d:\t0x%08x\n", out_str, i, regs[i]); i++;
-	asprintf(&out_str, "%sr%d:\t0x%08x\n", out_str, i, regs[i]); i++;
-	asprintf(&out_str, "%sr%d:\t0x%08x\n", out_str, i, regs[i]); i++;
-	asprintf(&out_str, "%s\n\n\n", out_str);
+	for (int i = 0; i < 0x10; i++) {
+		uc_reg_read(uc, dump_regs[i], &regs[i]);
+	}
 
-	global_pc = address + size;
+	str = string_format_cstr(DISASSEMBLY_STR "\n",
+							 (unsigned long long)insn[0].address,
+							 insn[0].mnemonic,
+							 insn[0].op_str);
+
+	str += "Registers:\n";
+
+	for (int i = 0; i < LIST_LEN(dump_regs); i++) {
+		str += string_format_cstr("r%d:\t0x%08x\n", i, regs[i]);
+	}
+
+	ret = strdup((char*)str.c_str());
+
+	return ret;
 }
 
 void xpDBG_window::step_clicked() {
@@ -115,6 +118,7 @@ void xpDBG_window::step_clicked() {
 				  err);
 	}
 
+	out_str = format_uc(uc_global);
 	reg_view.get_buffer()->set_text(out_str);
 }
 
@@ -305,8 +309,8 @@ xpDBG_window::xpDBG_window(int   argc,
 	xpdbg_log(LOG_VERBOSE, "Copying executable for emulation...");
 	uc_mem_write(uc_global, BASE_ADDY, buf, len);
 
-	xpdbg_log(LOG_VERBOSE, "Adding instruction hook for emulation...");
-	uc_hook_add(uc_global, &hook1, UC_HOOK_CODE, (void*)hook_code, NULL, BASE_ADDY, BASE_ADDY + len);
+//	xpdbg_log(LOG_VERBOSE, "Adding instruction hook for emulation...");
+//	uc_hook_add(uc_global, &hook1, UC_HOOK_CODE, (void*)hook_code, NULL, BASE_ADDY, BASE_ADDY + len);
 
 	/*
 	 *  set the actual thing
@@ -367,6 +371,9 @@ xpDBG_window::xpDBG_window(int   argc,
 
 	xpdbg_log(LOG_VERBOSE, "Adding ScrolledWinow...");
 	add(our_box);
+
+	out_str = format_uc(uc_global);
+	reg_view.get_buffer()->set_text(out_str);
 
 	xpdbg_log(LOG_VERBOSE, "Showing...");
 	show_all_children();
