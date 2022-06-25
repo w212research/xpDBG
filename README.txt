@@ -38,3 +38,13 @@ Planned features include:
 	- a disassembler to aid in reverse engineering
 	- possibly decompiler support (Ghidra?)
 	- and more!
+
+Credits:
+	spv				- project founding
+	Capstone Team	- Capstone
+	Unicorn Team	- Unicorn
+	Keystone Team	- Keystone
+	LIEF Project	- LIEF
+	QEMU			- QEMU
+	
+	and probably more...
