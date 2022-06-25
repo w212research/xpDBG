@@ -18,15 +18,15 @@ int main(int argc, char* argv[]) {
 	}
 #endif
 
-	char* path_to_binary = "/bin/cat";
+	char* path_to_binary = (char*)"/bin/cat";
 
-	unique_ptr<const Binary> binary = unique_ptr<const Binary>{ Parser::parse(path_to_binary) };
+	unique_ptr<const LIEF::ELF::Binary> binary = unique_ptr<const LIEF::ELF::Binary>{ LIEF::ELF::Parser::parse(path_to_binary) };
 	binary->functions();
 
-	printf("Binary: %s\n", binary->name().c_str());
-	printf("Interpreter: %s\n", binary->interpreter().c_str());
-	printf("== Header ==\n");
-	printf("%s\n", binary.header().c_str());
+	cout << "Binary: " << binary->name() << '\n';
+	cout << "Interpreter: " << binary->interpreter() << '\n';
+	cout << "== Header ==" << '\n';
+	cout << binary->header() << '\n';
 
 	return 0;
 }

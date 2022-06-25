@@ -10,7 +10,7 @@ clean:
 	rm -rf bin
 
 bin/main: bin/main.o
-	${CPP} ${CPPFLAGS} -llief $^ -o $@
+	${CPP} ${CPPFLAGS} -lLIEF $^ -o $@
 
 bin/%.o: src/%.cpp
 	${CPP} ${CPPFLAGS} $< -c -o $@
