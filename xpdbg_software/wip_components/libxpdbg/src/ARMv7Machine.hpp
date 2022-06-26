@@ -41,11 +41,11 @@ namespace libxpdbg {
 			bool set_register(reg_t reg);
 			std::vector<insn_t> disassemble_memory(uint64_t addr, uint64_t size);
 		protected:
-			uc_engine			   *uc;
-			std::vector<reg_t>		registers;
 			std::vector<mem_reg_t>	memory_regions;
-			csh						handle;
 			csh						handle_thumb;
+			std::vector<reg_t>		registers;
+			csh						handle;
+			uc_engine			   *uc;
 	};
 }
 
