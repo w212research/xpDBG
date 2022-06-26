@@ -25,6 +25,7 @@
 #define XP_PROT_READ (1 << 0)
 #define XP_PROT_WRITE (1 << 1)
 #define XP_PROT_EXEC (1 << 2)
+#define MNEMONIC_SIZE 32
 
 namespace libxpdbg {
 	typedef struct {
@@ -42,6 +43,18 @@ namespace libxpdbg {
 		mem_prot_t prot;
 	} mem_reg_t;
 
+	/*
+	 *  stolen-ish from capstone
+	 */
+	typedef struct {
+		uint32_t id;
+		uint64_t address;
+		uint16_t size;
+		uint8_t bytes[64];
+		char mnemonic[MNEMONIC_SIZE];
+		char op_str[160];
+	} insn_t;
+
 	class Machine {
 		public:
 			virtual std::vector<reg_t> get_registers() = 0;
@@ -56,6 +69,7 @@ namespace libxpdbg {
 			virtual bool exec_code_step() = 0;
 			virtual bool set_register(reg_t reg) = 0;
 			virtual bool exec_code_ninsns(uint64_t num) = 0;
+			virtual std::vector<insn_t> disassemble_memory(uint64_t addr, uint64_t size) = 0;
 //			virtual bool step_instruction() = 0;
 //			virtual bool run_instructions(uint64_t addr, uint64_t count) = 0;
 	};

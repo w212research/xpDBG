@@ -103,5 +103,11 @@ int main(int argc, char* argv[]) {
 		}
 	}
 
+	vector<libxpdbg::insn_t> disas = armv7_machine.disassemble_memory(0, sizeof(test_arm_code));
+
+	for (libxpdbg::insn_t& i : disas) {
+		printf("%016lx (%04x): %s %s\n", i.address, i.size, i.mnemonic, i.op_str);
+	}
+
 	return 0;
 }

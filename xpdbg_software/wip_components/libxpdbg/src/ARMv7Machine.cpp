@@ -19,6 +19,7 @@
 #include <unicorn/unicorn.h>
 #include "ARMv7Machine.hpp"
 #include "libxpdbg.hpp"
+#include <cstring>
 #include <cstdio>
 
 using namespace libxpdbg;
@@ -160,7 +161,15 @@ ARMv7Machine::ARMv7Machine() {
 	reg.reg_id = 15;
 	reg.reg_value = 0;
 	
-	this->registers.push_back(reg);	
+	this->registers.push_back(reg);
+
+	cs_open(CS_ARCH_ARM,
+			(cs_mode)(CS_MODE_ARM),
+			&handle);
+
+	cs_open(CS_ARCH_ARM,
+			(cs_mode)(CS_MODE_THUMB),
+			&handle_thumb);
 }
 
 ARMv7Machine::~ARMv7Machine() {
@@ -296,6 +305,44 @@ bool ARMv7Machine::set_register(reg_t reg) {
 		ret = (uc_reg_write(uc, normal_regs[reg.reg_id], &reg.reg_value) == UC_ERR_OK) ? true : false;
 	} else {
 		ret = false;
+	}
+
+	return ret;
+}
+
+std::vector<insn_t> ARMv7Machine::disassemble_memory(uint64_t addr, uint64_t size) {
+	uint8_t				 buf[size];
+	size_t				 count;
+	cs_insn				*insns;
+	insn_t				 insn;
+	std::vector<insn_t>	 ret;
+
+	this->read_memory(addr, buf, size);
+
+	if (addr & 1) {
+		count = cs_disasm(handle_thumb,
+						  buf,
+						  size,
+						  addr & (~1),
+						  0,
+						  &insns);
+	} else {
+		count = cs_disasm(handle,
+						  buf,
+						  size,
+						  addr,
+						  0,
+						  &insns);
+	}
+
+	for (int i = 0; i < count; i++) {
+		insn.id = insns[i].id;
+		insn.address = insns[i].address;
+		insn.size = insns[i].size;
+		memcpy(insn.bytes, insns[i].bytes, sizeof(insn.bytes));
+		memcpy(insn.mnemonic, insns[i].mnemonic, sizeof(insn.mnemonic));
+		memcpy(insn.op_str, insns[i].op_str, sizeof(insn.op_str));
+		ret.push_back(insn);
 	}
 
 	return ret;
