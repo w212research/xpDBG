@@ -29,31 +29,6 @@ using namespace std;
 
 uc_engine* uc_global;
 
-class Base {
-public:
-	virtual void print() = 0;
-};
-
-class Test1 : public Base {
-	public:
-		void print() {
-			this->str1 = "Hello, world! str1";
-			printf("%s\n", this->str1);
-		}
-	protected:
-		char* str1;
-};
-
-class Test2 : public Base {
-	public:
-		void print() {
-			this->str2 = "Hello, world! str2";
-			printf("%s\n", this->str2);
-		}
-	protected:
-		char* str2;
-};
-
 uint8_t test_arm_code[] = {
 	0x00, 0x00, 0xA0, 0xE1,
 	0x41, 0x00, 0xB0, 0xE3,
@@ -65,35 +40,6 @@ uint8_t test_arm_code[] = {
 };
 
 int main(int argc, char* argv[]) {
-	uc_err err;
-
-	err = uc_open(UC_ARCH_ARM,
-				  UC_MODE_THUMB,
-				  &uc_global);
-
-	if (err) {
-		printf("Failed on uc_open() with error returned: %u (%s)\n",
-			   err,
-			   uc_strerror(err));
-		return -1;
-	}
-
-	uc_mem_map(uc_global, BASE_ADDY, 0x100000, UC_PROT_ALL);
-
-	uc_close(uc_global);
-
-//	libxpdbg::Machine machine;
-
-//	machine.hello();
-
-/*
-	Test1 test1;
-	Test2 test2;
-
-	test1.print();
-	test2.print();
-	*/
-
 	libxpdbg::ARMv7Machine armv7_machine;
 
 	vector<libxpdbg::mem_reg_t> memory_regions = armv7_machine.get_memory_regions();
