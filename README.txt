@@ -40,11 +40,11 @@ Planned features include:
     - and more!
 
 Credits:
-    spv				- project founding
-    Capstone Team	- Capstone
-    Unicorn Team	- Unicorn
-    Keystone Team	- Keystone
-    LIEF Project	- LIEF
-    QEMU			- QEMU
+    spv           - project founding
+    Capstone Team - Capstone
+    Unicorn Team  - Unicorn
+    Keystone Team - Keystone
+    LIEF Project  - LIEF
+    QEMU          - QEMU
     
     and probably more...
