@@ -211,9 +211,25 @@ int ARMv7Machine::find_memory_region(uint64_t addr) {
 }
 
 bool ARMv7Machine::unmap_memory(mem_reg_t memory_region) {
-	boot ret = true;
+	bool ret = true;
 
 	ret = (uc_mem_unmap(this->uc, memory_region.addr, memory_region.size) == UC_ERR_OK) ? true : false;
+
+	return ret;
+}
+
+bool ARMv7Machine::read_memory(uint64_t addr, uint8_t* data, uint64_t size) {
+	bool ret = true;
+
+	ret = (uc_mem_read(this->uc, addr, data, size) == UC_ERR_OK) ? true : false;
+
+	return ret;
+}
+
+bool ARMv7Machine::write_memory(uint64_t addr, uint8_t* data, uint64_t size) {
+	bool ret = true;
+
+	ret = (uc_mem_write(this->uc, addr, data, size) == UC_ERR_OK) ? true : false;
 
 	return ret;
 }

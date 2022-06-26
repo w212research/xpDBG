@@ -54,6 +54,15 @@ class Test2 : public Base {
 		char* str2;
 };
 
+uint8_t test_arm_thumb_code[] = {
+	0x41, 0x20,						//	movs	r0,	#0x41
+	0x40, 0xF2, 0x20, 0x40,			//	movw	r0,	#0x420
+	0x40, 0xF2, 0x69, 0x01,			//	movw	r1,	#0x69
+	0xA0, 0xEB, 0x01, 0x00,			//	sub		r0,	r0,	r1
+	0x01, 0x44,						//	add		r1,	r1,	r0
+	0x00, 0x00,						//  mov		r0,	r0
+};
+
 int main(int argc, char* argv[]) {
 	uc_err err;
 
@@ -105,38 +114,20 @@ int main(int argc, char* argv[]) {
 		printf("%lx %lx %lx\n", i.addr, i.size, i.prot);
 	}
 
-	region.addr = 0x0;
-	region.size = 0x7777;
-	region.prot = XP_PROT_READ | XP_PROT_WRITE | XP_PROT_EXEC;
-
-	printf("map\n");
-	armv7_machine.map_memory(region);
-
-	memory_regions = armv7_machine.get_memory_regions();
-	for (libxpdbg::mem_reg_t& i : memory_regions) {
-		printf("%lx %lx %lx\n", i.addr, i.size, i.prot);
+	vector<libxpdbg::reg_t> registers = armv7_machine.get_registers();
+	for (libxpdbg::reg_t& i : registers) {
+		printf("%s %s %lx %lx\n", i.reg_description.c_str(), i.reg_name.c_str(), i.reg_id, i.reg_value);
 	}
 
-	region.addr = 0x20000;
-	region.size = 0x10000;
+	uint8_t* data = (uint8_t*)malloc(sizeof(test_arm_thumb_code));
 
-	printf("map\n");
-	armv7_machine.map_memory(region);
+	armv7_machine.write_memory(0, test_arm_thumb_code, sizeof(test_arm_thumb_code));
+	armv7_machine.read_memory(0, data, sizeof(test_arm_thumb_code));
 
-	memory_regions = armv7_machine.get_memory_regions();
-	for (libxpdbg::mem_reg_t& i : memory_regions) {
-		printf("%lx %lx %lx\n", i.addr, i.size, i.prot);
+	for (int i = 0; i < sizeof(test_arm_thumb_code); i++) {
+		printf("%02x", data[i]);
 	}
-
-	region.addr = 0x8000;
-	region.size = 0x8000;
-	printf("unmap\n");
-	armv7_machine.unmap_memory(region);
-
-	memory_regions = armv7_machine.get_memory_regions();
-	for (libxpdbg::mem_reg_t& i : memory_regions) {
-		printf("%lx %lx %lx\n", i.addr, i.size, i.prot);
-	}
+	printf("\n");
 
 	return 0;
 }

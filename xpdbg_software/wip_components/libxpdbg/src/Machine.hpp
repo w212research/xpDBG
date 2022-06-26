@@ -49,6 +49,8 @@ namespace libxpdbg {
 			virtual bool map_memory(mem_reg_t memory_region) = 0;
 			virtual bool unmap_memory(mem_reg_t memory_region) = 0;
 			virtual int find_memory_region(uint64_t addr) = 0;
+			virtual bool write_memory(uint64_t addr, uint8_t* data, uint64_t size) = 0;
+			virtual bool read_memory(uint64_t addr, uint8_t* data, uint64_t size) = 0;
 //			virtual bool step_instruction() = 0;
 //			virtual bool run_instructions(uint64_t addr, uint64_t count) = 0;
 	};
