@@ -23,6 +23,25 @@
 
 using namespace libxpdbg;
 
+uc_arm_reg normal_regs[] = {
+	UC_ARM_REG_R0,
+	UC_ARM_REG_R1,
+	UC_ARM_REG_R2,
+	UC_ARM_REG_R3,
+	UC_ARM_REG_R4,
+	UC_ARM_REG_R5,
+	UC_ARM_REG_R6,
+	UC_ARM_REG_R7,
+	UC_ARM_REG_R8,
+	UC_ARM_REG_R9,
+	UC_ARM_REG_R10,
+	UC_ARM_REG_R11,
+	UC_ARM_REG_R12,
+	UC_ARM_REG_R13,
+	UC_ARM_REG_R14,
+	UC_ARM_REG_R15,
+};
+
 ARMv7Machine::ARMv7Machine() {
 	uc_err err;
 	reg_t  reg;
@@ -149,6 +168,11 @@ ARMv7Machine::~ARMv7Machine() {
 }
 
 std::vector<reg_t> ARMv7Machine::get_registers() {
+	for (int i = 0; i < sizeof(normal_regs) / sizeof(normal_regs[0]); i++) {
+		uint32_t val;
+		uc_reg_read(this->uc, normal_regs[i], &val);
+		this->registers[i].reg_value = val;
+	}
 	return this->registers;
 }
 
@@ -230,6 +254,33 @@ bool ARMv7Machine::write_memory(uint64_t addr, uint8_t* data, uint64_t size) {
 	bool ret = true;
 
 	ret = (uc_mem_write(this->uc, addr, data, size) == UC_ERR_OK) ? true : false;
+
+	return ret;
+}
+
+bool ARMv7Machine::exec_code(uint64_t addr, uint64_t size) {
+	bool ret = true;
+
+	ret = (uc_emu_start(uc, addr, addr + size, 0, 0) == UC_ERR_OK) ? true : false;
+
+	return ret;
+}
+
+bool ARMv7Machine::exec_code_ninsns(uint64_t addr, uint64_t num) {
+	bool ret = true;
+
+	ret = (uc_emu_start(uc, addr, 0xffffffffffffffffL, 0, num) == UC_ERR_OK) ? true : false;
+
+	return ret;
+}
+
+bool ARMv7Machine::exec_code_step() {
+	uint32_t val;
+	bool	 ret = true;
+
+	uc_reg_read(uc, UC_ARM_REG_PC, &val);
+
+	ret = (uc_emu_start(uc, val, 0xffffffffffffffffL, 0, 1) == UC_ERR_OK) ? true : false;
 
 	return ret;
 }
