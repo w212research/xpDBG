@@ -285,9 +285,15 @@ bool ARMv7Machine::exec_code_addr_ninsns(uint64_t addr, uint64_t num) {
 
 bool ARMv7Machine::exec_code_ninsns(uint64_t num) {
 	bool	 ret = true;
+	uint32_t cpsr;
 	uint32_t val;
 
 	uc_reg_read(uc, UC_ARM_REG_PC, &val);
+	uc_reg_read(uc, UC_ARM_REG_CPSR, &cpsr);
+
+	if (cpsr & (1 << 5)) {
+		val |= 1;
+	}
 
 	ret = (uc_emu_start(uc, val, 0xffffffffffffffffL, 0, num) == UC_ERR_OK) ? true : false;
 
@@ -317,7 +323,7 @@ std::vector<insn_t> ARMv7Machine::disassemble_memory(uint64_t addr, uint64_t siz
 	insn_t				 insn;
 	std::vector<insn_t>	 ret;
 
-	this->read_memory(addr, buf, size);
+	this->read_memory(addr & (~1), buf, size);
 
 	if (addr & 1) {
 		count = cs_disasm(handle_thumb,

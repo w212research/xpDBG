@@ -39,6 +39,15 @@ uint8_t test_arm_code[] = {
 	0x00, 0x00, 0xA0, 0xE1,
 };
 
+uint8_t test_arm_thumb_code[] = {
+	0x41, 0x20,						//	movs	r0,	#0x41
+	0x40, 0xF2, 0x20, 0x40,			//	movw	r0,	#0x420
+	0x40, 0xF2, 0x69, 0x01,			//	movw	r1,	#0x69
+	0xA0, 0xEB, 0x01, 0x00,			//	sub		r0,	r0,	r1
+	0x01, 0x44,						//	add		r1,	r1,	r0
+	0x00, 0x00,						//  mov		r0,	r0
+};
+
 int main(int argc, char* argv[]) {
 	libxpdbg::ARMv7Machine armv7_machine;
 
@@ -66,12 +75,12 @@ int main(int argc, char* argv[]) {
 		printf("%s %s %lx %lx\n", i.reg_description.c_str(), i.reg_name.c_str(), i.reg_id, i.reg_value);
 	}
 
-	uint8_t* data = (uint8_t*)malloc(sizeof(test_arm_code));
+	uint8_t* data = (uint8_t*)malloc(sizeof(test_arm_thumb_code));
 
-	armv7_machine.write_memory(0, test_arm_code, sizeof(test_arm_code));
-	armv7_machine.read_memory(0, data, sizeof(test_arm_code));
+	armv7_machine.write_memory(0, test_arm_thumb_code, sizeof(test_arm_thumb_code));
+	armv7_machine.read_memory(0, data, sizeof(test_arm_thumb_code));
 
-	for (int i = 0; i < sizeof(test_arm_code); i++) {
+	for (int i = 0; i < sizeof(test_arm_thumb_code); i++) {
 		printf("%02x", data[i]);
 	}
 	printf("\n");
@@ -94,6 +103,18 @@ int main(int argc, char* argv[]) {
 		printf("%s %s %lx %lx\n", i.reg_description.c_str(), i.reg_name.c_str(), i.reg_id, i.reg_value);
 	}
 
+	printf("%d\n", __LINE__);
+	armv7_machine.exec_code_step();
+	printf("%d\n", __LINE__);
+	armv7_machine.exec_code_step();
+	printf("%d\n", __LINE__);
+	armv7_machine.exec_code_addr_ninsns(1, 1);
+	printf("%d\n", __LINE__);
+	armv7_machine.exec_code_step();
+	printf("%d\n", __LINE__);
+	armv7_machine.exec_code_step();
+	printf("%d\n", __LINE__);
+
 	for (int i = 0; i < 0x8; i++) {
 		armv7_machine.exec_code_step();
 
@@ -103,7 +124,7 @@ int main(int argc, char* argv[]) {
 		}
 	}
 
-	vector<libxpdbg::insn_t> disas = armv7_machine.disassemble_memory(0, sizeof(test_arm_code));
+	vector<libxpdbg::insn_t> disas = armv7_machine.disassemble_memory(1, sizeof(test_arm_thumb_code));
 
 	for (libxpdbg::insn_t& i : disas) {
 		printf("%016lx (%04x): %s %s\n", i.address, i.size, i.mnemonic, i.op_str);
