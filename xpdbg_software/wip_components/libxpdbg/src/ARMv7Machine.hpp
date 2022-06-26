@@ -37,6 +37,7 @@ namespace libxpdbg {
 			bool exec_code(uint64_t addr, uint64_t size);
 			bool exec_code_ninsns(uint64_t addr, uint64_t num);
 			bool exec_code_step();
+			virtual bool set_register(reg_t reg);
 		protected:
 			uc_engine			   *uc;
 			std::vector<reg_t>		registers;

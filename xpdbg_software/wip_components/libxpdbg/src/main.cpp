@@ -55,6 +55,7 @@ class Test2 : public Base {
 };
 
 uint8_t test_arm_code[] = {
+	0x00, 0x00, 0xA0, 0xE1,
 	0x41, 0x00, 0xB0, 0xE3,
 	0x20, 0x04, 0x00, 0xE3,
 	0x69, 0x10, 0x00, 0xE3,
@@ -128,6 +129,19 @@ int main(int argc, char* argv[]) {
 		printf("%02x", data[i]);
 	}
 	printf("\n");
+
+	registers = armv7_machine.get_registers();
+	for (libxpdbg::reg_t& i : registers) {
+		printf("%s %s %lx %lx\n", i.reg_description.c_str(), i.reg_name.c_str(), i.reg_id, i.reg_value);
+	}
+
+	libxpdbg::reg_t reg;
+	reg.reg_description = "r0";
+	reg.reg_name = "r0";
+	reg.reg_id = 0;
+	reg.reg_value = 0x7777;
+
+	armv7_machine.set_register(reg);
 
 	registers = armv7_machine.get_registers();
 	for (libxpdbg::reg_t& i : registers) {

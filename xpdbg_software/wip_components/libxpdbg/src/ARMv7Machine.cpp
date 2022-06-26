@@ -284,3 +284,15 @@ bool ARMv7Machine::exec_code_step() {
 
 	return ret;
 }
+
+bool ARMv7Machine::set_register(reg_t reg) {
+	bool ret = false;
+
+	if (reg.reg_id <= sizeof(normal_regs) / sizeof(normal_regs[0])) {
+		ret = (uc_reg_write(uc, normal_regs[reg.reg_id], &reg.reg_value) == UC_ERR_OK) ? true : false;
+	} else {
+		ret = false;
+	}
+
+	return ret;
+}

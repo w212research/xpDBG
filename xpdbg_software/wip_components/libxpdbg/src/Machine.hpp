@@ -54,6 +54,7 @@ namespace libxpdbg {
 			virtual bool exec_code(uint64_t addr, uint64_t size) = 0;
 			virtual bool exec_code_ninsns(uint64_t addr, uint64_t num) = 0;
 			virtual bool exec_code_step() = 0;
+			virtual bool set_register(reg_t reg) = 0;
 //			virtual bool step_instruction() = 0;
 //			virtual bool run_instructions(uint64_t addr, uint64_t count) = 0;
 	};
