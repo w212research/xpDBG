@@ -153,12 +153,29 @@ std::vector<reg_t> ARMv7Machine::get_registers() {
 }
 
 std::vector<mem_reg_t> ARMv7Machine::get_memory_regions() {
-	return this->memory_regions;
+	std::vector<mem_reg_t>	regions;
+	uc_mem_region		   *uc_style_memory_regions;
+	uint32_t				count;
+
+	uc_mem_regions(this->uc, &uc_style_memory_regions, &count);
+
+	for (int i = 0; i < count; i++) {
+		mem_reg_t region;
+		region.addr = uc_style_memory_regions[i].begin;
+		region.size = uc_style_memory_regions[i].end - region.addr;
+		region.prot = 0;
+		region.prot |= (uc_style_memory_regions[i].perms & UC_PROT_READ) ? XP_PROT_READ : 0;
+		region.prot |= (uc_style_memory_regions[i].perms & UC_PROT_WRITE) ? XP_PROT_WRITE : 0;
+		region.prot |= (uc_style_memory_regions[i].perms & UC_PROT_EXEC) ? XP_PROT_EXEC : 0;
+		regions.push_back(region);
+	}
+
+	return regions;
 }
 
 bool ARMv7Machine::map_memory(mem_reg_t memory_region) {
 	bool	 ret = true;
-	uint32_t prot;
+	uint32_t prot = 0;
 	uc_err	 err;
 
 	prot |= (memory_region.prot & XP_PROT_READ) ? UC_PROT_READ : 0;
@@ -171,8 +188,53 @@ bool ARMv7Machine::map_memory(mem_reg_t memory_region) {
 		fprintf(stderr, "uc_mem_map failed: %u (%s)\n", err, uc_strerror(err));
 		return false;
 	} else {
-		this->memory_regions.push_back(memory_region);
+//		this->memory_regions.push_back(memory_region);
 	}
+
+	return ret;
+}
+
+int ARMv7Machine::find_memory_region(uint64_t addr) {
+	std::vector<mem_reg_t> regions;
+	int					   index = 0;
+
+	regions = this->get_memory_regions();
+
+	for (mem_reg_t& i : regions) {
+		uint64_t start_addr = i.addr;
+		uint64_t end_addr = i.addr + i.size;
+		if (addr >= start_addr && addr < end_addr) {
+			return index;
+		}
+		index++;
+	}
+
+	return -1;
+}
+
+bool ARMv7Machine::unmap_memory(mem_reg_t memory_region) {
+//	int		  index = find_memory_region(memory_region.addr);
+//	mem_reg_t existing_region;
+//	mem_reg_t new_region;
+	bool	  ret = true;
+
+#if 0
+	existing_region = this->memory_regions.at(index);
+
+	if (index == -1) {
+		return false;
+	}
+#endif
+
+	ret = (uc_mem_unmap(this->uc, memory_region.addr, memory_region.size) == UC_ERR_OK) ? true : false;
+
+#if 0
+	if (memory_region.addr != existing_region.addr) {
+		new_region.addr = 
+	}
+
+	this->memory_regions.erase(this->memory_regions.begin() + index);
+#endif
 
 	return ret;
 }

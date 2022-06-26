@@ -47,7 +47,8 @@ namespace libxpdbg {
 			virtual std::vector<reg_t> get_registers() = 0;
 			virtual std::vector<mem_reg_t> get_memory_regions() = 0;
 			virtual bool map_memory(mem_reg_t memory_region) = 0;
-//			virtual bool unmap_memory(mem_reg_t memory_region) = 0;
+			virtual bool unmap_memory(mem_reg_t memory_region) = 0;
+			virtual int find_memory_region(uint64_t addr) = 0;
 //			virtual bool step_instruction() = 0;
 //			virtual bool run_instructions(uint64_t addr, uint64_t count) = 0;
 	};

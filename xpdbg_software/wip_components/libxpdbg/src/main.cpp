@@ -88,7 +88,7 @@ int main(int argc, char* argv[]) {
 
 	vector<libxpdbg::mem_reg_t> memory_regions = armv7_machine.get_memory_regions();
 	for (libxpdbg::mem_reg_t& i : memory_regions) {
-		printf("%lu %lu %lu\n", i.addr, i.size, i.prot);
+		printf("%lx %lx %lx\n", i.addr, i.size, i.prot);
 	}
 
 	libxpdbg::mem_reg_t region;
@@ -97,22 +97,45 @@ int main(int argc, char* argv[]) {
 	region.size = 0x10000;
 	region.prot = XP_PROT_READ | XP_PROT_WRITE | XP_PROT_EXEC;
 
+	printf("map\n");
 	armv7_machine.map_memory(region);
 
 	memory_regions = armv7_machine.get_memory_regions();
 	for (libxpdbg::mem_reg_t& i : memory_regions) {
-		printf("%lu %lu %lu\n", i.addr, i.size, i.prot);
+		printf("%lx %lx %lx\n", i.addr, i.size, i.prot);
 	}
 
 	region.addr = 0x0;
 	region.size = 0x7777;
 	region.prot = XP_PROT_READ | XP_PROT_WRITE | XP_PROT_EXEC;
 
+	printf("map\n");
 	armv7_machine.map_memory(region);
 
 	memory_regions = armv7_machine.get_memory_regions();
 	for (libxpdbg::mem_reg_t& i : memory_regions) {
-		printf("%lu %lu %lu\n", i.addr, i.size, i.prot);
+		printf("%lx %lx %lx\n", i.addr, i.size, i.prot);
+	}
+
+	region.addr = 0x20000;
+	region.size = 0x10000;
+
+	printf("map\n");
+	armv7_machine.map_memory(region);
+
+	memory_regions = armv7_machine.get_memory_regions();
+	for (libxpdbg::mem_reg_t& i : memory_regions) {
+		printf("%lx %lx %lx\n", i.addr, i.size, i.prot);
+	}
+
+	region.addr = 0x8000;
+	region.size = 0x8000;
+	printf("unmap\n");
+	armv7_machine.unmap_memory(region);
+
+	memory_regions = armv7_machine.get_memory_regions();
+	for (libxpdbg::mem_reg_t& i : memory_regions) {
+		printf("%lx %lx %lx\n", i.addr, i.size, i.prot);
 	}
 
 	return 0;

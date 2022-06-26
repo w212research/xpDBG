@@ -30,6 +30,8 @@ namespace libxpdbg {
 			std::vector<reg_t> get_registers();
 			std::vector<mem_reg_t> get_memory_regions();
 			bool map_memory(mem_reg_t);
+			bool unmap_memory(mem_reg_t);
+			int find_memory_region(uint64_t addr);
 		protected:
 			uc_engine			   *uc;
 			std::vector<reg_t>		registers;
