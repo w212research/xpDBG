@@ -75,10 +75,11 @@ int main(int argc, char* argv[]) {
 		printf("%s %s %lx %lx\n", i.reg_description.c_str(), i.reg_name.c_str(), i.reg_id, i.reg_value);
 	}
 
-	uint8_t* data = (uint8_t*)malloc(sizeof(test_arm_thumb_code));
+	vector<uint8_t> data;
+	vector<uint8_t> test_arm_thumb_code_vector(test_arm_thumb_code, test_arm_thumb_code + sizeof(test_arm_thumb_code));
 
-	armv7_machine.write_memory(0, test_arm_thumb_code, sizeof(test_arm_thumb_code));
-	armv7_machine.read_memory(0, data, sizeof(test_arm_thumb_code));
+	armv7_machine.write_memory(0, test_arm_thumb_code_vector);
+	data = armv7_machine.read_memory(0, sizeof(test_arm_thumb_code));
 
 	for (int i = 0; i < sizeof(test_arm_thumb_code); i++) {
 		printf("%02x", data[i]);
@@ -124,7 +125,8 @@ int main(int argc, char* argv[]) {
 		}
 	}
 
-	vector<libxpdbg::insn_t> disas = armv7_machine.disassemble_memory(1, sizeof(test_arm_thumb_code));
+	data = armv7_machine.read_memory(0, sizeof(test_arm_thumb_code));
+	vector<libxpdbg::insn_t> disas = armv7_machine.disassemble(data, XP_FLAG_THUMB);
 
 	for (libxpdbg::insn_t& i : disas) {
 		printf("%016lx (%04x): %s %s\n", i.address, i.size, i.mnemonic, i.op_str);

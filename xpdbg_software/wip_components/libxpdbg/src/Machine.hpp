@@ -27,6 +27,8 @@
 #define XP_PROT_EXEC (1 << 2)
 #define MNEMONIC_SIZE 32
 
+#define XP_FLAG_THUMB (1 << 0)
+
 namespace libxpdbg {
 	typedef struct {
 		std::string reg_name;
@@ -55,6 +57,8 @@ namespace libxpdbg {
 		char op_str[160];
 	} insn_t;
 
+	typedef uint32_t flag_t;
+
 	class Machine {
 		public:
 			virtual std::vector<reg_t> get_registers() = 0;
@@ -62,14 +66,17 @@ namespace libxpdbg {
 			virtual bool map_memory(mem_reg_t memory_region) = 0;
 			virtual bool unmap_memory(mem_reg_t memory_region) = 0;
 			virtual int find_memory_region(uint64_t addr) = 0;
-			virtual bool write_memory(uint64_t addr, uint8_t* data, uint64_t size) = 0;
-			virtual bool read_memory(uint64_t addr, uint8_t* data, uint64_t size) = 0;
+			virtual bool write_memory(uint64_t addr, std::vector<uint8_t> data) = 0;
+			virtual std::vector<uint8_t> read_memory(uint64_t addr, uint64_t size) = 0;
 			virtual bool exec_code_addr(uint64_t addr, uint64_t size) = 0;
 			virtual bool exec_code_addr_ninsns(uint64_t addr, uint64_t num) = 0;
 			virtual bool exec_code_step() = 0;
 			virtual bool set_register(reg_t reg) = 0;
 			virtual bool exec_code_ninsns(uint64_t num) = 0;
-			virtual std::vector<insn_t> disassemble_memory(uint64_t addr, uint64_t size) = 0;
+			virtual std::vector<insn_t> disassemble(std::vector<uint8_t> data, flag_t flags) = 0;
+			virtual std::vector<uint8_t> assemble(std::string src, flag_t flags) = 0;
+//			virtual bool step_back() = 0;
+//			virtual bool step_forward() = 0;
 //			virtual bool step_instruction() = 0;
 //			virtual bool run_instructions(uint64_t addr, uint64_t count) = 0;
 	};

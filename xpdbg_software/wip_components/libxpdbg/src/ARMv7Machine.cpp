@@ -19,6 +19,7 @@
 #include <unicorn/unicorn.h>
 #include "ARMv7Machine.hpp"
 #include "libxpdbg.hpp"
+#include <algorithm>
 #include <cstring>
 #include <cstdio>
 
@@ -58,124 +59,126 @@ ARMv7Machine::ARMv7Machine() {
 				  UC_MODE_THUMB,
 				  &this->uc);
 
+	reg.reg_id = -1;
+
 	/*
 	 *  create descriptions for all of the registers we intend to "publish"
 	 */
 	reg.reg_description = "r0";
 	reg.reg_name = "r0";
-	reg.reg_id = 0;
+	reg.reg_id++;
 	reg.reg_value = 0;
 	
 	this->registers.push_back(reg);
 
 	reg.reg_description = "r1";
 	reg.reg_name = "r1";
-	reg.reg_id = 1;
+	reg.reg_id++;
 	reg.reg_value = 0;
 	
 	this->registers.push_back(reg);
 
 	reg.reg_description = "r2";
 	reg.reg_name = "r2";
-	reg.reg_id = 2;
+	reg.reg_id++;
 	reg.reg_value = 0;
 	
 	this->registers.push_back(reg);
 
 	reg.reg_description = "r3";
 	reg.reg_name = "r3";
-	reg.reg_id = 3;
+	reg.reg_id++;
 	reg.reg_value = 0;
 	
 	this->registers.push_back(reg);
 
 	reg.reg_description = "r4";
 	reg.reg_name = "r4";
-	reg.reg_id = 4;
+	reg.reg_id++;
 	reg.reg_value = 0;
 	
 	this->registers.push_back(reg);
 
 	reg.reg_description = "r5";
 	reg.reg_name = "r5";
-	reg.reg_id = 5;
+	reg.reg_id++;
 	reg.reg_value = 0;
 	
 	this->registers.push_back(reg);
 
 	reg.reg_description = "r6";
 	reg.reg_name = "r6";
-	reg.reg_id = 6;
+	reg.reg_id++;
 	reg.reg_value = 0;
 	
 	this->registers.push_back(reg);
 
 	reg.reg_description = "r7";
 	reg.reg_name = "r7";
-	reg.reg_id = 7;
+	reg.reg_id++;
 	reg.reg_value = 0;
 	
 	this->registers.push_back(reg);
 
 	reg.reg_description = "r8";
 	reg.reg_name = "r8";
-	reg.reg_id = 8;
+	reg.reg_id++;
 	reg.reg_value = 0;
 	
 	this->registers.push_back(reg);
 
 	reg.reg_description = "r9";
 	reg.reg_name = "r9";
-	reg.reg_id = 9;
+	reg.reg_id++;
 	reg.reg_value = 0;
 	
 	this->registers.push_back(reg);
 
 	reg.reg_description = "r10";
 	reg.reg_name = "r10";
-	reg.reg_id = 10;
+	reg.reg_id++;
 	reg.reg_value = 0;
 	
 	this->registers.push_back(reg);
 
 	reg.reg_description = "r11";
 	reg.reg_name = "r11";
-	reg.reg_id = 11;
+	reg.reg_id++;
 	reg.reg_value = 0;
 	
 	this->registers.push_back(reg);
 
 	reg.reg_description = "ip";
 	reg.reg_name = "ip";
-	reg.reg_id = 12;
+	reg.reg_id++;
 	reg.reg_value = 0;
 	
 	this->registers.push_back(reg);
 
 	reg.reg_description = "sp";
 	reg.reg_name = "sp";
-	reg.reg_id = 13;
+	reg.reg_id++;
 	reg.reg_value = 0;
 	
 	this->registers.push_back(reg);
 
 	reg.reg_description = "lr";
 	reg.reg_name = "lr";
-	reg.reg_id = 14;
+	reg.reg_id++;
 	reg.reg_value = 0;
 	
 	this->registers.push_back(reg);
 
 	reg.reg_description = "pc";
 	reg.reg_name = "pc";
-	reg.reg_id = 15;
+	reg.reg_id++;
 	reg.reg_value = 0;
 	
 	this->registers.push_back(reg);
 
 	reg.reg_description = "cpsr";
 	reg.reg_name = "cpsr";
-	reg.reg_id = 16;
+	reg.reg_id++;
 	reg.reg_value = 0;
 	
 	this->registers.push_back(reg);
@@ -304,18 +307,32 @@ bool ARMv7Machine::unmap_memory(mem_reg_t memory_region) {
 	return ret;
 }
 
-bool ARMv7Machine::read_memory(uint64_t addr, uint8_t* data, uint64_t size) {
-	bool ret = true;
+std::vector<uint8_t> ARMv7Machine::read_memory(uint64_t addr, uint64_t size) {
+	uint8_t				 buf[size];
+	uc_err				 err;
+	std::vector<uint8_t> ret;
 
-	ret = (uc_mem_read(this->uc, addr, data, size) == UC_ERR_OK) ? true : false;
+	err = uc_mem_read(this->uc, addr, buf, size);
+
+	if (err) {
+		fprintf(stderr, "uc_mem_read failed with %u (%s)\n", err, uc_strerror(err));
+	}
+
+	for (int i = 0; i < size; i++) {
+		ret.push_back(buf[i]);
+	}
 
 	return ret;
 }
 
-bool ARMv7Machine::write_memory(uint64_t addr, uint8_t* data, uint64_t size) {
-	bool ret = true;
+bool ARMv7Machine::write_memory(uint64_t addr, std::vector<uint8_t> data) {
+	uint32_t size = data.size();
+	uint8_t	 buf[size];
+	bool	 ret = true;
 
-	ret = (uc_mem_write(this->uc, addr, data, size) == UC_ERR_OK) ? true : false;
+	std::copy(data.begin(), data.end(), buf);
+
+	ret = (uc_mem_write(this->uc, addr, buf, size) == UC_ERR_OK) ? true : false;
 
 	return ret;
 }
@@ -384,30 +401,28 @@ bool ARMv7Machine::set_register(reg_t reg) {
 	return ret;
 }
 
-std::vector<insn_t> ARMv7Machine::disassemble_memory(uint64_t addr, uint64_t size) {
+std::vector<insn_t> ARMv7Machine::disassemble(std::vector<uint8_t> data, flag_t flags) {
+	uint32_t			 size = data.size();
 	uint8_t				 buf[size];
 	size_t				 count;
 	cs_insn				*insns;
 	insn_t				 insn;
 	std::vector<insn_t>	 ret;
 
-	/*
-	 *  &~1 because |1 denotes thumb
-	 */
-	this->read_memory(addr & (~1), buf, size);
+	std::copy(data.begin(), data.end(), buf);
 
-	if (addr & 1) {
+	if (flags & XP_FLAG_THUMB) {
 		count = cs_disasm(handle_thumb,
 						  buf,
 						  size,
-						  addr & (~1),
+						  0,
 						  0,
 						  &insns);
 	} else {
 		count = cs_disasm(handle,
 						  buf,
 						  size,
-						  addr,
+						  0,
 						  0,
 						  &insns);
 	}
@@ -416,13 +431,19 @@ std::vector<insn_t> ARMv7Machine::disassemble_memory(uint64_t addr, uint64_t siz
 		insn.id = insns[i].id;
 		insn.address = insns[i].address;
 		insn.size = insns[i].size;
-		
+
 		memcpy(insn.bytes, insns[i].bytes, sizeof(insn.bytes));
 		memcpy(insn.mnemonic, insns[i].mnemonic, sizeof(insn.mnemonic));
 		memcpy(insn.op_str, insns[i].op_str, sizeof(insn.op_str));
 
 		ret.push_back(insn);
 	}
+
+	return ret;
+}
+
+std::vector<uint8_t> ARMv7Machine::assemble(std::string src, flag_t flags) {
+	std::vector<uint8_t> ret;
 
 	return ret;
 }
