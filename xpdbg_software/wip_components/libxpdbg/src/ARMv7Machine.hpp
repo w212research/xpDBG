@@ -28,9 +28,12 @@ namespace libxpdbg {
 			ARMv7Machine();
 			~ARMv7Machine();
 			std::vector<reg_t> get_registers();
+			std::vector<mem_reg_t> get_memory_regions();
+			bool map_memory(mem_reg_t);
 		protected:
-			uc_engine		   *uc;
-			std::vector<reg_t>	registers;
+			uc_engine			   *uc;
+			std::vector<reg_t>		registers;
+			std::vector<mem_reg_t>	memory_regions;
 	};
 }
 

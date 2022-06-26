@@ -151,3 +151,28 @@ ARMv7Machine::~ARMv7Machine() {
 std::vector<reg_t> ARMv7Machine::get_registers() {
 	return this->registers;
 }
+
+std::vector<mem_reg_t> ARMv7Machine::get_memory_regions() {
+	return this->memory_regions;
+}
+
+bool ARMv7Machine::map_memory(mem_reg_t memory_region) {
+	bool	 ret = true;
+	uint32_t prot;
+	uc_err	 err;
+
+	prot |= (memory_region.prot & XP_PROT_READ) ? UC_PROT_READ : 0;
+	prot |= (memory_region.prot & XP_PROT_WRITE) ? UC_PROT_WRITE : 0;
+	prot |= (memory_region.prot & XP_PROT_EXEC) ? UC_PROT_EXEC : 0;
+
+	err = uc_mem_map(this->uc, memory_region.addr, memory_region.size, prot);
+
+	if (err) {
+		fprintf(stderr, "uc_mem_map failed: %u (%s)\n", err, uc_strerror(err));
+		return false;
+	} else {
+		this->memory_regions.push_back(memory_region);
+	}
+
+	return ret;
+}

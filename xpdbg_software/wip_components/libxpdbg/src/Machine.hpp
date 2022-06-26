@@ -22,6 +22,10 @@
 #include <vector>
 #include <string>
 
+#define XP_PROT_READ (1 << 0)
+#define XP_PROT_WRITE (1 << 1)
+#define XP_PROT_EXEC (1 << 2)
+
 namespace libxpdbg {
 	typedef struct {
 		std::string reg_name;
@@ -30,9 +34,22 @@ namespace libxpdbg {
 		uint64_t reg_value;
 	} reg_t;
 
+	typedef uint64_t mem_prot_t;
+
+	typedef struct {
+		uint64_t addr;
+		uint64_t size;
+		mem_prot_t prot;
+	} mem_reg_t;
+
 	class Machine {
 		public:
 			virtual std::vector<reg_t> get_registers() = 0;
+			virtual std::vector<mem_reg_t> get_memory_regions() = 0;
+			virtual bool map_memory(mem_reg_t memory_region) = 0;
+//			virtual bool unmap_memory(mem_reg_t memory_region) = 0;
+//			virtual bool step_instruction() = 0;
+//			virtual bool run_instructions(uint64_t addr, uint64_t count) = 0;
 	};
 }
 

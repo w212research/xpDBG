@@ -21,6 +21,9 @@
 #include <LIEF/LIEF.hpp>
 #include "libxpdbg.hpp"
 #include <cstdio>
+#include <vector>
+
+using namespace std;
 
 #define BASE_ADDY 0x0
 
@@ -73,13 +76,44 @@ int main(int argc, char* argv[]) {
 
 //	machine.hello();
 
+/*
 	Test1 test1;
 	Test2 test2;
 
 	test1.print();
 	test2.print();
+	*/
 
 	libxpdbg::ARMv7Machine armv7_machine;
+
+	vector<libxpdbg::mem_reg_t> memory_regions = armv7_machine.get_memory_regions();
+	for (libxpdbg::mem_reg_t& i : memory_regions) {
+		printf("%lu %lu %lu\n", i.addr, i.size, i.prot);
+	}
+
+	libxpdbg::mem_reg_t region;
+
+	region.addr = 0x0;
+	region.size = 0x10000;
+	region.prot = XP_PROT_READ | XP_PROT_WRITE | XP_PROT_EXEC;
+
+	armv7_machine.map_memory(region);
+
+	memory_regions = armv7_machine.get_memory_regions();
+	for (libxpdbg::mem_reg_t& i : memory_regions) {
+		printf("%lu %lu %lu\n", i.addr, i.size, i.prot);
+	}
+
+	region.addr = 0x0;
+	region.size = 0x7777;
+	region.prot = XP_PROT_READ | XP_PROT_WRITE | XP_PROT_EXEC;
+
+	armv7_machine.map_memory(region);
+
+	memory_regions = armv7_machine.get_memory_regions();
+	for (libxpdbg::mem_reg_t& i : memory_regions) {
+		printf("%lu %lu %lu\n", i.addr, i.size, i.prot);
+	}
 
 	return 0;
 }
