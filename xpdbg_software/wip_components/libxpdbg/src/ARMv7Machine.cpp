@@ -211,7 +211,7 @@ int ARMv7Machine::find_memory_region(uint64_t addr) {
 }
 
 bool ARMv7Machine::unmap_memory(mem_reg_t memory_region) {
-	bool	  ret = true;
+	boot ret = true;
 
 	ret = (uc_mem_unmap(this->uc, memory_region.addr, memory_region.size) == UC_ERR_OK) ? true : false;
 
