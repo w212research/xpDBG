@@ -24,6 +24,9 @@
 
 using namespace libxpdbg;
 
+/*
+ *  "normal" registers, contains the registers returned by get_registers.
+ */
 uc_arm_reg normal_regs[] = {
 	UC_ARM_REG_R0,
 	UC_ARM_REG_R1,
@@ -41,6 +44,7 @@ uc_arm_reg normal_regs[] = {
 	UC_ARM_REG_R13,
 	UC_ARM_REG_R14,
 	UC_ARM_REG_R15,
+	UC_ARM_REG_CPSR,
 };
 
 ARMv7Machine::ARMv7Machine() {
@@ -159,6 +163,13 @@ ARMv7Machine::ARMv7Machine() {
 	reg.reg_description = "pc";
 	reg.reg_name = "pc";
 	reg.reg_id = 15;
+	reg.reg_value = 0;
+	
+	this->registers.push_back(reg);
+
+	reg.reg_description = "cpsr";
+	reg.reg_name = "cpsr";
+	reg.reg_id = 16;
 	reg.reg_value = 0;
 	
 	this->registers.push_back(reg);
