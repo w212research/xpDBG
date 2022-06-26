@@ -284,8 +284,8 @@ bool ARMv7Machine::exec_code_addr_ninsns(uint64_t addr, uint64_t num) {
 }
 
 bool ARMv7Machine::exec_code_ninsns(uint64_t num) {
-	uint32_t val;
 	bool	 ret = true;
+	uint32_t val;
 
 	uc_reg_read(uc, UC_ARM_REG_PC, &val);
 
