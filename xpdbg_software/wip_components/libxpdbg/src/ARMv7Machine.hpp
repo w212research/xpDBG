@@ -34,10 +34,11 @@ namespace libxpdbg {
 			int find_memory_region(uint64_t addr);
 			bool write_memory(uint64_t addr, uint8_t* data, uint64_t size);
 			bool read_memory(uint64_t addr, uint8_t* data, uint64_t size);
-			bool exec_code(uint64_t addr, uint64_t size);
-			bool exec_code_ninsns(uint64_t addr, uint64_t num);
+			bool exec_code_addr(uint64_t addr, uint64_t size);
+			bool exec_code_addr_ninsns(uint64_t addr, uint64_t num);
+			bool exec_code_ninsns(uint64_t num);
 			bool exec_code_step();
-			virtual bool set_register(reg_t reg);
+			bool set_register(reg_t reg);
 		protected:
 			uc_engine			   *uc;
 			std::vector<reg_t>		registers;

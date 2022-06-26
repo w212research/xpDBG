@@ -258,7 +258,7 @@ bool ARMv7Machine::write_memory(uint64_t addr, uint8_t* data, uint64_t size) {
 	return ret;
 }
 
-bool ARMv7Machine::exec_code(uint64_t addr, uint64_t size) {
+bool ARMv7Machine::exec_code_addr(uint64_t addr, uint64_t size) {
 	bool ret = true;
 
 	ret = (uc_emu_start(uc, addr, addr + size, 0, 0) == UC_ERR_OK) ? true : false;
@@ -266,7 +266,7 @@ bool ARMv7Machine::exec_code(uint64_t addr, uint64_t size) {
 	return ret;
 }
 
-bool ARMv7Machine::exec_code_ninsns(uint64_t addr, uint64_t num) {
+bool ARMv7Machine::exec_code_addr_ninsns(uint64_t addr, uint64_t num) {
 	bool ret = true;
 
 	ret = (uc_emu_start(uc, addr, 0xffffffffffffffffL, 0, num) == UC_ERR_OK) ? true : false;
@@ -274,15 +274,19 @@ bool ARMv7Machine::exec_code_ninsns(uint64_t addr, uint64_t num) {
 	return ret;
 }
 
-bool ARMv7Machine::exec_code_step() {
+bool ARMv7Machine::exec_code_ninsns(uint64_t num) {
 	uint32_t val;
 	bool	 ret = true;
 
 	uc_reg_read(uc, UC_ARM_REG_PC, &val);
 
-	ret = (uc_emu_start(uc, val, 0xffffffffffffffffL, 0, 1) == UC_ERR_OK) ? true : false;
+	ret = (uc_emu_start(uc, val, 0xffffffffffffffffL, 0, num) == UC_ERR_OK) ? true : false;
 
 	return ret;
+}
+
+bool ARMv7Machine::exec_code_step() {
+	return this->exec_code_ninsns(1);
 }
 
 bool ARMv7Machine::set_register(reg_t reg) {
