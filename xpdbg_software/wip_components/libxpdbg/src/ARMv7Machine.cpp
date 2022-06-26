@@ -187,8 +187,6 @@ bool ARMv7Machine::map_memory(mem_reg_t memory_region) {
 	if (err) {
 		fprintf(stderr, "uc_mem_map failed: %u (%s)\n", err, uc_strerror(err));
 		return false;
-	} else {
-//		this->memory_regions.push_back(memory_region);
 	}
 
 	return ret;
@@ -213,28 +211,9 @@ int ARMv7Machine::find_memory_region(uint64_t addr) {
 }
 
 bool ARMv7Machine::unmap_memory(mem_reg_t memory_region) {
-//	int		  index = find_memory_region(memory_region.addr);
-//	mem_reg_t existing_region;
-//	mem_reg_t new_region;
 	bool	  ret = true;
 
-#if 0
-	existing_region = this->memory_regions.at(index);
-
-	if (index == -1) {
-		return false;
-	}
-#endif
-
 	ret = (uc_mem_unmap(this->uc, memory_region.addr, memory_region.size) == UC_ERR_OK) ? true : false;
-
-#if 0
-	if (memory_region.addr != existing_region.addr) {
-		new_region.addr = 
-	}
-
-	this->memory_regions.erase(this->memory_regions.begin() + index);
-#endif
 
 	return ret;
 }
