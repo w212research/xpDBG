@@ -15,8 +15,8 @@
  *  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-#ifndef LIBXPDBG_HPP
-#define LIBXPDBG_HPP
+#ifndef ARMV7MACHINE_HPP
+#define ARMV7MACHINE_HPP
 
 #include "libxpdbg.hpp"
 #include "Machine.hpp"
