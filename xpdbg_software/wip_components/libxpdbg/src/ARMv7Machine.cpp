@@ -193,6 +193,14 @@ ARMv7Machine::ARMv7Machine() {
 	cs_open(CS_ARCH_ARM,
 			(cs_mode)(CS_MODE_THUMB),
 			&handle_thumb);
+
+	ks_open(KS_ARCH_ARM,
+			KS_MODE_ARM,
+			&ks);
+	
+	ks_open(KS_ARCH_ARM,
+			KS_MODE_THUMB,
+			&ks_thumb);
 }
 
 ARMv7Machine::~ARMv7Machine() {
@@ -442,8 +450,34 @@ std::vector<insn_t> ARMv7Machine::disassemble(std::vector<uint8_t> data, flag_t 
 	return ret;
 }
 
-std::vector<uint8_t> ARMv7Machine::assemble(std::string src, flag_t flags) {
-	std::vector<uint8_t> ret;
+std::vector<uint8_t> ARMv7Machine::assemble(std::string src, uint64_t addr, flag_t flags) {
+	ks_err				  err_ks;
+	size_t				  count;
+	size_t				  size;
+	uint8_t				 *data;
+	std::vector<uint8_t>  ret;
+
+	if (flags & XP_FLAG_THUMB) {
+		ks_asm(ks_thumb,
+			   src.c_str(),
+			   addr,
+			   &data,
+			   &size,
+			   &count);
+	} else {
+		ks_asm(ks,
+			   src.c_str(),
+			   addr,
+			   &data,
+			   &size,
+			   &count);
+	}
+
+	for (int i = 0; i < size; i++) {
+		ret.push_back(data[i]);
+	}
+
+	ks_free(data);
 
 	return ret;
 }

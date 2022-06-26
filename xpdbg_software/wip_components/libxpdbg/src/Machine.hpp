@@ -74,7 +74,7 @@ namespace libxpdbg {
 			virtual bool set_register(reg_t reg) = 0;
 			virtual bool exec_code_ninsns(uint64_t num) = 0;
 			virtual std::vector<insn_t> disassemble(std::vector<uint8_t> data, flag_t flags) = 0;
-			virtual std::vector<uint8_t> assemble(std::string src, flag_t flags) = 0;
+			virtual std::vector<uint8_t> assemble(std::string src, uint64_t addr, flag_t flags) = 0;
 //			virtual bool step_back() = 0;
 //			virtual bool step_forward() = 0;
 //			virtual bool step_instruction() = 0;

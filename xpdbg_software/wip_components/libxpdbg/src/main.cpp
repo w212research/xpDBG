@@ -72,7 +72,7 @@ int main(int argc, char* argv[]) {
 
 	vector<libxpdbg::reg_t> registers = armv7_machine.get_registers();
 	for (libxpdbg::reg_t& i : registers) {
-		printf("%s %s %lx %lx\n", i.reg_description.c_str(), i.reg_name.c_str(), i.reg_id, i.reg_value);
+//		printf("%s %s %lx %lx\n", i.reg_description.c_str(), i.reg_name.c_str(), i.reg_id, i.reg_value);
 	}
 
 	vector<uint8_t> data;
@@ -88,7 +88,7 @@ int main(int argc, char* argv[]) {
 
 	registers = armv7_machine.get_registers();
 	for (libxpdbg::reg_t& i : registers) {
-		printf("%s %s %lx %lx\n", i.reg_description.c_str(), i.reg_name.c_str(), i.reg_id, i.reg_value);
+//		printf("%s %s %lx %lx\n", i.reg_description.c_str(), i.reg_name.c_str(), i.reg_id, i.reg_value);
 	}
 
 	libxpdbg::reg_t reg;
@@ -101,7 +101,7 @@ int main(int argc, char* argv[]) {
 
 	registers = armv7_machine.get_registers();
 	for (libxpdbg::reg_t& i : registers) {
-		printf("%s %s %lx %lx\n", i.reg_description.c_str(), i.reg_name.c_str(), i.reg_id, i.reg_value);
+//		printf("%s %s %lx %lx\n", i.reg_description.c_str(), i.reg_name.c_str(), i.reg_id, i.reg_value);
 	}
 
 	printf("%d\n", __LINE__);
@@ -121,12 +121,22 @@ int main(int argc, char* argv[]) {
 
 		registers = armv7_machine.get_registers();
 		for (libxpdbg::reg_t& i : registers) {
-			printf("%s %s %lx %lx\n", i.reg_description.c_str(), i.reg_name.c_str(), i.reg_id, i.reg_value);
+//			printf("%s %s %lx %lx\n", i.reg_description.c_str(), i.reg_name.c_str(), i.reg_id, i.reg_value);
 		}
 	}
 
 	data = armv7_machine.read_memory(0, sizeof(test_arm_thumb_code));
 	vector<libxpdbg::insn_t> disas = armv7_machine.disassemble(data, XP_FLAG_THUMB);
+
+	for (libxpdbg::insn_t& i : disas) {
+		printf("%016lx (%04x): %s %s\n", i.address, i.size, i.mnemonic, i.op_str);
+	}
+
+	std::vector<uint8_t> assembled = armv7_machine.assemble("mov r0, #0x41\nmov r0, r0\n", 0, XP_FLAG_THUMB);
+
+	printf("assembled\n");
+
+	disas = armv7_machine.disassemble(assembled, XP_FLAG_THUMB);
 
 	for (libxpdbg::insn_t& i : disas) {
 		printf("%016lx (%04x): %s %s\n", i.address, i.size, i.mnemonic, i.op_str);

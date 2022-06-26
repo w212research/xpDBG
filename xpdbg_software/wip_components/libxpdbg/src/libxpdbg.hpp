@@ -24,6 +24,9 @@ namespace libxpdbg {
 	 */
 }
 
+#include <capstone/capstone.h>
+#include <keystone/keystone.h>
+#include <unicorn/unicorn.h>
 #include "Machine.hpp"
 
 #endif

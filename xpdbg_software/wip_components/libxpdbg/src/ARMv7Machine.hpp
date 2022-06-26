@@ -40,13 +40,15 @@ namespace libxpdbg {
 			bool exec_code_step();
 			bool set_register(reg_t reg);
 			std::vector<insn_t> disassemble(std::vector<uint8_t> data, flag_t flags);
-			std::vector<uint8_t> assemble(std::string src, flag_t flags);
+			std::vector<uint8_t> assemble(std::string src, uint64_t addr, flag_t flags);
 		protected:
 			std::vector<mem_reg_t>	memory_regions;
 			csh						handle_thumb;
 			std::vector<reg_t>		registers;
+			ks_engine			   *ks_thumb;
 			csh						handle;
 			uc_engine			   *uc;
+			ks_engine			   *ks;
 	};
 }
 
