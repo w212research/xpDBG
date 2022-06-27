@@ -1,4 +1,4 @@
-CPP=clang++
+CPP=g++
 CPPFLAGS=--std=c++17
 
 all: bin bin/main
