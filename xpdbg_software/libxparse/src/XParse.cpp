@@ -17,17 +17,17 @@
 
 #include "XParse.hpp"
 
-using namespace XParse;
+using namespace std;
 
-format_t XParse::detect_format(std::vector<uint8_t> buf) {
-    format_t ret = FORMAT_UNKNOWN;
+XParse::format_t XParse::detect_format(vector<uint8_t> buf) {
+    XParse::format_t ret = XParse::FORMAT_UNKNOWN;
 
     if (buf.size() < 4) {
         goto out;
     }
 
     if (buf[0] == '\x7f' && buf[1] == 'E' && buf[2] == 'L' && buf[3] == 'F') {
-        ret = FORMAT_ELF;
+        ret = XParse::FORMAT_ELF;
     }
 
 out:
