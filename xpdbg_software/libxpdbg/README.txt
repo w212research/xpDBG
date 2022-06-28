@@ -13,10 +13,10 @@ managing reverse engineering, analysis, and general software research tasks in
 a single, contained library.
 
 Examples of targeted functionality include:
-	- controlling/managing emulated machines, say for debugging purposes
-	- providing an interface between custom software packages and other software
+    - controlling/managing emulated machines, say for debugging purposes
+    - providing an interface between custom software packages and other software
       that intends to provide general purpose machine support, à la xpDBG. [1]
-	- disassembling machine code
-	- decompiling machine code
-	- assembling, compiling code
-	- and more
+    - disassembling machine code
+    - decompiling machine code
+    - assembling, compiling code
+    - and more
