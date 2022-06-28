@@ -25,12 +25,12 @@ namespace XParse {
 	typedef enum {
 		ELF_32 = 1,
 		ELF_64 = 2,
-	} elf_addr_size_t;
+	} raw_elf_addr_size_t;
 
 	typedef enum {
 		ELF_LITTLE_ENDIAN = 1,
 		ELF_BIG_ENDIAN = 2,
-	} elf_endianness_t;
+	} raw_elf_endianness_t;
 
 	typedef enum {
 		ELF_ABI_SYSTEM_V = 0x0,
@@ -51,7 +51,7 @@ namespace XParse {
 		ELF_ABI_FENIXOS = 0x10,
 		ELF_ABI_CLOUDABI = 0x11,
 		ELF_ABI_OPENVOS = 0x12,
-	} elf_abi_t;
+	} raw_elf_abi_t;
 
 	typedef enum {
 		ELF_OBJ_TYPE_UNKNOWN = 0x0,
@@ -62,7 +62,7 @@ namespace XParse {
 		ELF_OBJ_TYPE_INVALID = 0x5,
 		ELF_OBJ_TYPE_RESERVED_OS = 0xfe00,
 		ELF_OBJ_TYPE_RESERVED_PROCESSOR = 0xff00,
-	} elf_obj_type_t;
+	} raw_elf_obj_type_t;
 	
 	typedef enum {
 		ELF_ISA_UNSPECIFIED = 0x0,
@@ -133,7 +133,7 @@ namespace XParse {
 		ELF_ISA_RISC_V = 0xf3,
 		ELF_ISA_BPF = 0xf7,
 		ELF_ISA_WDC_65C816 = 0x101,
-	} elf_isa_t;
+	} raw_elf_isa_t;
 
 	typedef enum {
 		ELF_SEGMENT_NULL = 0x0,
@@ -146,13 +146,13 @@ namespace XParse {
 		ELF_SEGMENT_TLS = 0x7,
 		ELF_SEGMENT_RESERVED_OS = 0x60000000,
 		ELF_SEGMENT_RESERVED_PROCESSOR = 0x70000000,
-	} elf_segment_type_t;
+	} raw_elf_segment_type_t;
 
 	typedef struct {
-		elf_abi_t abi;
+		raw_elf_abi_t abi;
 		uint8_t abi_version;
-		elf_obj_type_t obj_type;
-		elf_isa_t isa;
+		raw_elf_obj_type_t obj_type;
+		raw_elf_isa_t isa;
 		uint64_t address;
 		uint64_t section_header_offset;
 		uint32_t flags;
@@ -161,10 +161,10 @@ namespace XParse {
 		uint16_t section_header_entry_size;
 		uint16_t section_header_entry_count;
 		uint16_t section_header_name_entry_index;
-	} elf_file_header_t;
+	} raw_elf_file_header_t;
 
 	typedef struct {
-		elf_segment_type_t segment_type;
+		raw_elf_segment_type_t segment_type;
 		uint32_t flags;
 		uint64_t offset;
 		uint64_t virtual_addr;
@@ -172,7 +172,7 @@ namespace XParse {
 		uint64_t size_in_file;
 		uint64_t size_in_memory;
 		uint64_t alignment;
-	} elf_program_header_t;
+	} raw_elf_program_header_t;
 }
 
 #endif
