@@ -20,14 +20,14 @@
 using namespace XParse;
 
 format_t XParse::detect_format(std::vector<uint8_t> buf) {
-    format_t ret = XPARSE_UNKNOWN;
+    format_t ret = FORMAT_UNKNOWN;
 
     if (buf.size() < 4) {
         goto out;
     }
 
     if (buf[0] == '\x7f' && buf[1] == 'E' && buf[2] == 'L' && buf[3] == 'F') {
-        ret = XPARSE_ELF;
+        ret = FORMAT_ELF;
     }
 
 out:

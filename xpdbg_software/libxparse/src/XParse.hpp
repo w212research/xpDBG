@@ -23,10 +23,10 @@
 
 namespace XParse {
 	typedef enum {
-		XPARSE_ELF,
-		XPARSE_MACHO,
-		XPARSE_PE,
-		XPARSE_UNKNOWN,
+		FORMAT_ELF,
+		FORMAT_MACHO,
+		FORMAT_PE,
+		FORMAT_UNKNOWN,
 	} format_t;
 
 	format_t detect_format(std::vector<uint8_t> buf);
