@@ -144,7 +144,7 @@ namespace XParse {
 		uint32_t flags;
 		uint16_t phentsize;
 		uint16_t phnum;
-		uint16_t shentsie;
+		uint16_t shentsize;
 		uint16_t shnum;
 		uint16_t shstrndx;
 	} elf_file_header_t;
