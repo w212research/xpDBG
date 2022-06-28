@@ -5,7 +5,7 @@ __  ___ __   __| | |__   __ _
 /_/\_\ .__/ \__,_|_.__/ \__, |
      |_|                |___/
 
-xpdbg_software
+xpDBG Software
 
-folder for the actual xpDBG software, whether that's the main application or
-components of it; any software-components of the project.
+This folder contains the source tree, resources, and such for the actual xpDBG
+software, and its components.
