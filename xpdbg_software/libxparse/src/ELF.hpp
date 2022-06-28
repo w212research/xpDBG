@@ -139,14 +139,14 @@ namespace XParse {
 		uint8_t abi_version;
 		elf_obj_type_t obj_type;
 		elf_isa_t isa;
-		uint64_t addr;
-		uint64_t shoff;
+		uint64_t address;
+		uint64_t section_header_offset;
 		uint32_t flags;
-		uint16_t phentsize;
-		uint16_t phnum;
-		uint16_t shentsize;
-		uint16_t shnum;
-		uint16_t shstrndx;
+		uint16_t program_header_entry_size;
+		uint16_t program_header_entry_count;
+		uint16_t section_header_entry_size;
+		uint16_t section_header_entry_count;
+		uint16_t section_header_name_entry_index;
 	} elf_file_header_t;
 }
 
