@@ -18,6 +18,7 @@
 #include "XParse.hpp"
 #include "ELF.hpp"
 #include <string>
+#include "lib.h"
 
 using namespace std;
 
@@ -359,6 +360,19 @@ XParse::ELF::raw_elf_file_header_t XParse::ELF::parse_elf_binary_raw(vector<uint
 
 	ret.obj_type = (XParse::ELF::raw_elf_obj_type_t)obj_type;
 
+	if (ret.addr_size == XParse::ELF::ELF_64) {
+		if (ret.endianness == XParse::ELF::ELF_LITTLE_ENDIAN) {
+			ret.entry_address = ((long)(buf[0x1f]) << 56)
+								| ((long)(buf[0x1e]) << 48)
+								| ((long)(buf[0x1d]) << 40)
+								| ((long)(buf[0x1c]) << 32)
+								| ((long)(buf[0x1b]) << 24)
+								| ((long)(buf[0x1a]) << 16)
+								| ((long)(buf[0x19]) <<  8)
+								| ((long)(buf[0x18]) <<  0);
+		}
+	}
+
 out:
 	return ret;
 }
@@ -375,6 +389,7 @@ string XParse::ELF::to_string_raw(XParse::ELF::raw_elf_file_header_t file_header
 	ret += "Object Type: " + ((file_header.obj_type < XParse::ELF::ELF_OBJ_TYPE_INVALID) ? obj_type_strs[file_header.obj_type]
 																						 : "OS/Processor Specific") + "\n";
 	ret += "ISA: " + isa_strs[file_header.isa] + "\n";
+	ret += "Entry Address: " + string_format("0x%016x", file_header.entry_address) + "\n";
 
 	return ret;
 }

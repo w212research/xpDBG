@@ -162,7 +162,7 @@ namespace XParse {
 			uint8_t abi_version;
 			raw_elf_obj_type_t obj_type;
 			raw_elf_isa_t isa;
-			uint64_t address;
+			uint64_t entry_address;
 			uint64_t section_header_offset;
 			uint32_t flags;
 			uint16_t program_header_entry_size;

@@ -9,7 +9,7 @@ bin:
 clean:
 	rm -rf bin
 
-bin/main: bin/main.o bin/XParse.o bin/ELF.o
+bin/main: bin/main.o bin/XParse.o bin/ELF.o bin/lib.o
 	${CPP} ${CPPFLAGS} $^ -o $@
 
 bin/%.o: src/%.cpp
