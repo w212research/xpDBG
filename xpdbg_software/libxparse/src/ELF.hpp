@@ -139,6 +139,14 @@ namespace XParse {
 		uint8_t abi_version;
 		elf_obj_type_t obj_type;
 		elf_isa_t isa;
+		uint64_t addr;
+		uint64_t shoff;
+		uint32_t flags;
+		uint16_t phentsize;
+		uint16_t phnum;
+		uint16_t shentsie;
+		uint16_t shnum;
+		uint16_t shstrndx;
 	} elf_t;
 }
 
