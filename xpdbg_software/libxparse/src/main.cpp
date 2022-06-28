@@ -26,6 +26,14 @@
 using namespace std;
 
 int main(int argc, char* argv[]) {
+	if (argc == 1) {
+		fprintf(stderr, "usage: %s (path to binary)\n", argv[0]);
+		return -1;
+	} else if (argc == 0) {
+		fprintf(stderr, "usage: xparse (path to binary)\n");
+		return -1;
+	}
+
 	ifstream f(argv[1], ios::binary);
 	vector<uint8_t> buf(istreambuf_iterator<char>(f), {});
 	XParse::format_t format;
@@ -40,6 +48,8 @@ int main(int argc, char* argv[]) {
 	printf("%x\n", file_header.endianness);
 	printf("%x\n", file_header.abi);
 	printf("%x\n", file_header.obj_type);
+
+	printf("%s\n", XParse::ELF::to_string_raw(file_header).c_str());
 
 	return 0;
 }
