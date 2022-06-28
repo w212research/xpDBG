@@ -139,7 +139,7 @@ namespace XParse {
 		uint8_t abi_version;
 		elf_obj_type_t obj_type;
 		elf_isa_t isa;
-	} elf32_t;
+	} elf_t;
 }
 
 #endif
