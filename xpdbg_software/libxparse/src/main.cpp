@@ -26,7 +26,7 @@
 using namespace std;
 
 int main(int argc, char* argv[]) {
-	ifstream f(NORMAL_TEST_ELF_PATH, ios::binary);
+	ifstream f(argv[1], ios::binary);
 	vector<uint8_t> buf(istreambuf_iterator<char>(f), {});
 	XParse::format_t format;
 
