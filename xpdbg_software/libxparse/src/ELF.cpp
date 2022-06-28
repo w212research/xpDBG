@@ -17,8 +17,34 @@
 
 #include "XParse.hpp"
 #include "ELF.hpp"
+#include <string>
 
 using namespace std;
+
+namespace XParse {
+	namespace ELF {
+		std::string abi_strs[] = {
+			"SystemV",
+			"HP-UX",
+			"NetBSD",
+			"Linux",
+			"Hurd",
+			"Solaris",
+			"AIX",
+			"IRIX",
+			"FreeBSD",
+			"Tru64",
+			"Modesto",
+			"OpenBSD",
+			"OpenVMS",
+			"NonStop",
+			"AROS",
+			"FenixOS",
+			"CloudABI",
+			"OpenVOS",
+		};
+	}
+}
 
 XParse::ELF::raw_elf_file_header_t XParse::ELF::parse_elf_binary_raw(vector<uint8_t> buf) {
 	uint16_t						   obj_type;
@@ -59,5 +85,15 @@ XParse::ELF::raw_elf_file_header_t XParse::ELF::parse_elf_binary_raw(vector<uint
 	ret.obj_type = (XParse::ELF::raw_elf_obj_type_t)obj_type;
 
 out:
+	return ret;
+}
+
+string XParse::ELF::to_string_raw(XParse::ELF::raw_elf_file_header_t file_header) {
+	string ret;
+
+	ret += (file_header.addr_size == XParse::ELF::ELF_32) ? "32-bit ELF" : "64-bit ELF";
+	ret += (file_header.endianness == XParse::ELF::ELF_LITTLE_ENDIAN) ? " LE\n" : " BE\n";
+	ret += "ABI: " + abi_strs[file_header.abi] + "\n";
+
 	return ret;
 }

@@ -20,6 +20,7 @@
 
 #include "XParse.hpp"
 #include <cstdint>
+#include <string>
 
 namespace XParse {
 	namespace ELF {
@@ -183,6 +184,8 @@ namespace XParse {
 		} raw_elf_program_header_t;
 
 		raw_elf_file_header_t parse_elf_binary_raw(std::vector<uint8_t> buf);
+
+		std::string to_string_raw(raw_elf_file_header_t file_header);
 	}
 }
 
