@@ -370,6 +370,27 @@ XParse::ELF::raw_elf_file_header_t XParse::ELF::parse_elf_binary_raw(vector<uint
 								| ((long)(buf[0x1a]) << 16)
 								| ((long)(buf[0x19]) <<  8)
 								| ((long)(buf[0x18]) <<  0);
+		} else {
+			ret.entry_address = ((long)(buf[0x18]) << 56)
+								| ((long)(buf[0x19]) << 48)
+								| ((long)(buf[0x1a]) << 40)
+								| ((long)(buf[0x1b]) << 32)
+								| ((long)(buf[0x1c]) << 24)
+								| ((long)(buf[0x1d]) << 16)
+								| ((long)(buf[0x1e]) <<  8)
+								| ((long)(buf[0x1f]) <<  0);
+		}
+	} else {
+		if (ret.endianness == XParse::ELF::ELF_LITTLE_ENDIAN) {
+			ret.entry_address = ((long)(buf[0x1b]) << 24)
+								| ((long)(buf[0x1a]) << 16)
+								| ((long)(buf[0x19]) <<  8)
+								| ((long)(buf[0x18]) <<  0);
+		} else {
+			ret.entry_address = ((long)(buf[0x1c]) << 24)
+								| ((long)(buf[0x1d]) << 16)
+								| ((long)(buf[0x1e]) <<  8)
+								| ((long)(buf[0x1f]) <<  0);
 		}
 	}
 
