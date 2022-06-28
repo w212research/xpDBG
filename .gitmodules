@@ -11,3 +11,6 @@
 [submodule "xpdbg_software/submodules/LIEF"]
 	path = xpdbg_software/submodules/LIEF
 	url = https://github.com/lief-project/LIEF.git
+[submodule "xpdbg_software/submodules/binary-samples"]
+	path = xpdbg_software/submodules/binary-samples
+	url = https://github.com/JonathanSalwan/binary-samples.git
