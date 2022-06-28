@@ -8,4 +8,6 @@ __  ___ __   __| | |__   __ _
 libxParse
 
 This folder contains the source tree & resources for libxParse, which is a
-project to create a FOSS, self-contained executable parser.
+subproject of xpDBG to create a FOSS, self-contained executable parser.
+
+Code style, commit message style, and such are planned to be the same as xpDBG.
