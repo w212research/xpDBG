@@ -27,6 +27,13 @@
 
 using namespace std;
 
+template <typename T>
+std::string to_string(const T& value) {
+	std::ostringstream os;
+	os << value;
+	return os.str();
+}
+
 int main(int argc, char* argv[]) {
 #if 0
 	if (argc < 2) {
@@ -39,6 +46,8 @@ int main(int argc, char* argv[]) {
 
 	unique_ptr<const LIEF::ELF::Binary> binary = unique_ptr<const LIEF::ELF::Binary>{ LIEF::ELF::Parser::parse(path_to_binary) };
 	binary->functions();
+
+//	printf("%s\n", to_string(binary->header()).c_str());
 
 	cout << "Binary: " << binary->name() << '\n';
 	cout << "Interpreter: " << binary->interpreter() << '\n';
