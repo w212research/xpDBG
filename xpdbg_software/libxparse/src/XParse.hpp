@@ -15,24 +15,24 @@
  *  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-#include "XParse.hpp"
+#ifndef XPARSE_HPP
+#define XPARSE_HPP
+
 #include <cstdint>
-#include <cstring>
-#include <fstream>
-#include <cstdio>
 #include <vector>
 
-using namespace std;
+namespace XParse {
+	typedef enum {
+		XPARSE_ELF,
+		XPARSE_MACHO,
+		XPARSE_PE,
+		XPARSE_UNKNOWN,
+	} format_t;
 
-int main(int argc, char* argv[]) {
-	ifstream f(NORMAL_TEST_ELF_PATH, ios::binary);
-	vector<uint8_t> buf(istreambuf_iterator<char>(f), {});
-	XParse::format_t format;
-
-	f.close();
-
-	format = XParse::detect_format(buf);
-	printf("%d\n", format);
-
-	return 0;
+	format_t detect_format(std::vector<uint8_t> buf);
 }
+
+#define NORMAL_TEST_ELF_PATH "../submodules/binary-samples/elf-Linux-x64-bash"
+#define NORMAL_TEST_MACHO_PATH "../submodules/binary-samples/MachO-OSX-x64-ls"
+
+#endif

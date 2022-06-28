@@ -16,23 +16,20 @@
  */
 
 #include "XParse.hpp"
-#include <cstdint>
-#include <cstring>
-#include <fstream>
-#include <cstdio>
-#include <vector>
 
-using namespace std;
+using namespace XParse;
 
-int main(int argc, char* argv[]) {
-	ifstream f(NORMAL_TEST_ELF_PATH, ios::binary);
-	vector<uint8_t> buf(istreambuf_iterator<char>(f), {});
-	XParse::format_t format;
+format_t XParse::detect_format(std::vector<uint8_t> buf) {
+    format_t ret = XPARSE_UNKNOWN;
 
-	f.close();
+    if (buf.size() < 4) {
+        goto out;
+    }
 
-	format = XParse::detect_format(buf);
-	printf("%d\n", format);
+    if (buf[0] == '\x7f' && buf[1] == 'E' && buf[2] == 'L' && buf[3] == 'F') {
+        ret = XPARSE_ELF;
+    }
 
-	return 0;
+out:
+    return ret;
 }
