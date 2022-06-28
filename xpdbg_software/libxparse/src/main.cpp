@@ -36,7 +36,10 @@ int main(int argc, char* argv[]) {
 	printf("%d\n", format);
 
 	XParse::ELF::raw_elf_file_header_t file_header = XParse::ELF::parse_elf_binary_raw(buf);
-	printf("%d\n", file_header.endianness);
+	printf("%x\n", file_header.addr_size);
+	printf("%x\n", file_header.endianness);
+	printf("%x\n", file_header.abi);
+	printf("%x\n", file_header.obj_type);
 
 	return 0;
 }
