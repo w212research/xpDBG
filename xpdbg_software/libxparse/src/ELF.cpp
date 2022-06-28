@@ -43,6 +43,14 @@ namespace XParse {
 			"CloudABI",
 			"OpenVOS",
 		};
+
+		std::string obj_type_strs[] = {
+			"Unknown",
+			"Relocatable file",
+			"Executable file",
+			"Shared object",
+			"Core file"
+		};
 	}
 }
 
@@ -91,9 +99,14 @@ out:
 string XParse::ELF::to_string_raw(XParse::ELF::raw_elf_file_header_t file_header) {
 	string ret;
 
-	ret += (file_header.addr_size == XParse::ELF::ELF_32) ? "32-bit ELF" : "64-bit ELF";
-	ret += (file_header.endianness == XParse::ELF::ELF_LITTLE_ENDIAN) ? " LE\n" : " BE\n";
+	ret += "Binary Type: ";
+	ret += (file_header.addr_size == XParse::ELF::ELF_32) ? "32-bit ELF"
+														  : "64-bit ELF";
+	ret += (file_header.endianness == XParse::ELF::ELF_LITTLE_ENDIAN) ? " LE\n"
+																	  : " BE\n";
 	ret += "ABI: " + abi_strs[file_header.abi] + "\n";
+	ret += "Object Type: " + ((file_header.obj_type < XParse::ELF::ELF_OBJ_TYPE_INVALID) ? obj_type_strs[file_header.obj_type]
+																						 : "OS/Processor Specific") + "\n";
 
 	return ret;
 }
