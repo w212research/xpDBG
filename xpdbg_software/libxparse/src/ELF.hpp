@@ -165,6 +165,13 @@ namespace XParse {
 
 	typedef struct {
 		elf_segment_type_t segment_type;
+		uint32_t flags;
+		uint64_t offset;
+		uint64_t virtual_addr;
+		uint64_t physical_addr;
+		uint64_t size_in_file;
+		uint64_t size_in_memory;
+		uint64_t alignment;
 	} elf_program_header_t;
 }
 
