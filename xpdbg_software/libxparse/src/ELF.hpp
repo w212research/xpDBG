@@ -147,7 +147,7 @@ namespace XParse {
 		uint16_t shentsie;
 		uint16_t shnum;
 		uint16_t shstrndx;
-	} elf_t;
+	} elf_file_header_t;
 }
 
 #endif
