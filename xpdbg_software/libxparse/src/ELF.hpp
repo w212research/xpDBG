@@ -134,6 +134,19 @@ namespace XParse {
 		ELF_ISA_WDC_65C816 = 0x101,
 	} elf_isa_t;
 
+	typedef enum {
+		ELF_SEGMENT_NULL = 0x0,
+		ELF_SEGMENT_LOAD = 0x1,
+		ELF_SEGMENT_DYNAMIC = 0x2,
+		ELF_SEGMENT_INTERPRETER = 0x3,
+		ELF_SEGMENT_NOTE = 0x4,
+		ELF_SEGMENT_SHLIB = 0x5,
+		ELF_SEGMENT_PROGRAM_HEADER = 0x6,
+		ELF_SEGMENT_TLS = 0x7,
+		ELF_SEGMENT_RESERVED_OS = 0x60000000,
+		ELF_SEGMENT_RESERVED_PROCESSOR = 0x70000000,
+	} elf_segment_type_t;
+
 	typedef struct {
 		elf_abi_t abi;
 		uint8_t abi_version;
@@ -148,6 +161,10 @@ namespace XParse {
 		uint16_t section_header_entry_count;
 		uint16_t section_header_name_entry_index;
 	} elf_file_header_t;
+
+	typedef struct {
+		elf_segment_type_t segment_type;
+	} elf_program_header_t;
 }
 
 #endif
