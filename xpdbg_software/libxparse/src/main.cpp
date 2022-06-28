@@ -19,6 +19,7 @@
 #include <cstdint>
 #include <cstring>
 #include <fstream>
+#include "ELF.hpp"
 #include <cstdio>
 #include <vector>
 
@@ -33,6 +34,9 @@ int main(int argc, char* argv[]) {
 
 	format = XParse::detect_format(buf);
 	printf("%d\n", format);
+
+	XParse::ELF::raw_elf_file_header_t file_header = XParse::ELF::parse_elf_binary_raw(buf);
+	printf("%d\n", file_header.endianness);
 
 	return 0;
 }
