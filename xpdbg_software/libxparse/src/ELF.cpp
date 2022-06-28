@@ -28,7 +28,7 @@ XParse::ELF::raw_elf_file_header_t XParse::ELF::parse_elf_binary_raw(vector<uint
 	
 	if (ret.addr_size != XParse::ELF::ELF_32
 		&& ret.addr_size != XParse::ELF::ELF_64) {
-		ret.endianness = XParse::ELF::ELF_INVALID_ADDR_SIZE;
+		ret.addr_size = XParse::ELF::ELF_INVALID_ADDR_SIZE;
 	}
 	
 	if (ret.endianness != XParse::ELF::ELF_BIG_ENDIAN
