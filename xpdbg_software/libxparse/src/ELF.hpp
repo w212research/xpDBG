@@ -41,6 +41,7 @@ namespace XParse {
 			ELF_ABI_NETBSD = 0x2,
 			ELF_ABI_LINUX = 0x3,
 			ELF_ABI_HURD = 0x4,
+			ELF_ABI_INVALID = 0x5,
 			ELF_ABI_SOLARIS = 0x6,
 			ELF_ABI_AIX = 0x7,
 			ELF_ABI_IRIX = 0x8,
@@ -54,6 +55,7 @@ namespace XParse {
 			ELF_ABI_FENIXOS = 0x10,
 			ELF_ABI_CLOUDABI = 0x11,
 			ELF_ABI_OPENVOS = 0x12,
+			ELF_ABI__END,
 		} raw_elf_abi_t;
 
 		typedef enum {
@@ -65,6 +67,7 @@ namespace XParse {
 			ELF_OBJ_TYPE_INVALID = 0x5,
 			ELF_OBJ_TYPE_RESERVED_OS = 0xfe00,
 			ELF_OBJ_TYPE_RESERVED_PROCESSOR = 0xff00,
+			ELF_OBJ_TYPE_END = 0xffff,
 		} raw_elf_obj_type_t;
 
 		typedef enum {

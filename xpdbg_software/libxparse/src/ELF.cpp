@@ -21,6 +21,7 @@
 using namespace std;
 
 XParse::ELF::raw_elf_file_header_t XParse::ELF::parse_elf_binary_raw(vector<uint8_t> buf) {
+	uint16_t						   obj_type;
 	XParse::ELF::raw_elf_file_header_t ret;
 
 	ret.addr_size = (XParse::ELF::raw_elf_addr_size_t)buf[0x4];
@@ -35,6 +36,27 @@ XParse::ELF::raw_elf_file_header_t XParse::ELF::parse_elf_binary_raw(vector<uint
 		&& ret.endianness != XParse::ELF::ELF_LITTLE_ENDIAN) {
 		ret.endianness = XParse::ELF::ELF_INVALID_ENDIANNESS;
 	}
+
+	ret.abi = (XParse::ELF::raw_elf_abi_t)buf[0x7];
+
+	if (ret.abi >= XParse::ELF::ELF_ABI__END) {
+		ret.abi = XParse::ELF::ELF_ABI_INVALID;
+	}
+
+	ret.abi_version = buf[0x8];
+
+	if (ret.endianness == XParse::ELF::ELF_LITTLE_ENDIAN) {
+		obj_type = (buf[0x11] << 8) | (buf[0x10]);
+	} else {
+		obj_type = (buf[0x10] << 8) | (buf[0x11]);
+	}
+
+	if (!((XParse::ELF::ELF_OBJ_TYPE_UNKNOWN <= obj_type) && (obj_type < XParse::ELF::ELF_OBJ_TYPE_INVALID))
+		&& !((XParse::ELF::ELF_OBJ_TYPE_RESERVED_OS <= obj_type) && (obj_type <= XParse::ELF::ELF_OBJ_TYPE_END))) {
+		obj_type = XParse::ELF::ELF_OBJ_TYPE_INVALID;
+	}
+
+	ret.obj_type = (XParse::ELF::raw_elf_obj_type_t)obj_type;
 
 out:
 	return ret;
