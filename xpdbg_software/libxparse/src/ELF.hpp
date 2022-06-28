@@ -149,6 +149,8 @@ namespace XParse {
 	} raw_elf_segment_type_t;
 
 	typedef struct {
+		raw_elf_addr_size_t addr_size;
+		raw_elf_endianness_t endianness;
 		raw_elf_abi_t abi;
 		uint8_t abi_version;
 		raw_elf_obj_type_t obj_type;
