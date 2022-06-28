@@ -320,39 +320,74 @@ XParse::ELF::raw_elf_file_header_t XParse::ELF::parse_elf_binary_raw(vector<uint
 	uint16_t						   obj_type;
 	XParse::ELF::raw_elf_file_header_t ret;
 
+	/*
+	 *  ELF File Header contains a flag @ 0x4.
+	 *  if the byte is 1, it uses 32-bit addresses, and if the byte is 2, it
+	 *  uses 64-bit addresses.
+	 * 
+	 *  same situation for endianness, @ 0x5. 1 = little endian, 2 = big endian.
+	 */
 	ret.addr_size = (XParse::ELF::raw_elf_addr_size_t)buf[0x4];
 	ret.endianness = (XParse::ELF::raw_elf_endianness_t)buf[0x5];
 	
+	/*
+	 *  if addr_size is invalid (not 32/64), set it to INVALID
+	 */
 	if (ret.addr_size != XParse::ELF::ELF_32
 		&& ret.addr_size != XParse::ELF::ELF_64) {
 		ret.addr_size = XParse::ELF::ELF_INVALID_ADDR_SIZE;
 	}
 	
+	/*
+	 *  if endianness is invalid (not little/big endian), set it to INVALID
+	 */
 	if (ret.endianness != XParse::ELF::ELF_BIG_ENDIAN
 		&& ret.endianness != XParse::ELF::ELF_LITTLE_ENDIAN) {
 		ret.endianness = XParse::ELF::ELF_INVALID_ENDIANNESS;
 	}
 
+	/*
+	 *  ABI is @ 0x7
+	 */
 	ret.abi = (XParse::ELF::raw_elf_abi_t)buf[0x7];
 
+	/*
+	 *  ELF_ABI__END is the max value for XParse::ELF::raw_elf_abi_t.
+	 */
 	if (ret.abi >= XParse::ELF::ELF_ABI__END) {
 		ret.abi = XParse::ELF::ELF_ABI_INVALID;
 	}
 
+	/*
+	 *  abi_version is mostly unused TMK, but for completeness
+	 */
 	ret.abi_version = buf[0x8];
 
+	/*
+	 *  obj_type is endianness-dependent
+	 */
 	if (ret.endianness == XParse::ELF::ELF_LITTLE_ENDIAN) {
 		obj_type = (buf[0x11] << 8) | (buf[0x10]);
 	} else {
 		obj_type = (buf[0x10] << 8) | (buf[0x11]);
 	}
 
+	/*
+	 *  isa is endianness-dependent
+	 */
 	if (ret.endianness == XParse::ELF::ELF_LITTLE_ENDIAN) {
 		ret.isa = (XParse::ELF::raw_elf_isa_t)((buf[0x13] << 8) | (buf[0x12]));
 	} else {
 		ret.isa = (XParse::ELF::raw_elf_isa_t)((buf[0x12] << 8) | (buf[0x13]));
 	}
 
+	/*
+	 *  check if obj_type is valid
+	 *  unknown = 0, invalid is the biggest val before the reserved shit,
+	 *  and RESERVED_OS starts the reserved section before 0xffff (END)
+	 * 
+	 *  so if it's not in those ranges, set it to invalid
+	 */
 	if (!((XParse::ELF::ELF_OBJ_TYPE_UNKNOWN <= obj_type) && (obj_type < XParse::ELF::ELF_OBJ_TYPE_INVALID))
 		&& !((XParse::ELF::ELF_OBJ_TYPE_RESERVED_OS <= obj_type) && (obj_type <= XParse::ELF::ELF_OBJ_TYPE_END))) {
 		obj_type = XParse::ELF::ELF_OBJ_TYPE_INVALID;
@@ -360,6 +395,9 @@ XParse::ELF::raw_elf_file_header_t XParse::ELF::parse_elf_binary_raw(vector<uint
 
 	ret.obj_type = (XParse::ELF::raw_elf_obj_type_t)obj_type;
 
+	/*
+	 *  more endian-specific code & size specific too
+	 */
 	if (ret.addr_size == XParse::ELF::ELF_64) {
 		if (ret.endianness == XParse::ELF::ELF_LITTLE_ENDIAN) {
 			ret.entry_address = ((long)(buf[0x1f]) << 56)
