@@ -1,3 +1,11 @@
+--------------------------------------------------------------------------------
+IMPORTANT NOTE
+--------------------------------------------------------------------------------
+The xpDBG project has been archived. The name has been changed to Medusa, and
+the repository has been moved to GitLab. The new website is medusa-re.org.
+
+Below is the previous README.txt.
+--------------------------------------------------------------------------------
                 _ _
 __  ___ __   __| | |__   __ _
 \ \/ / '_ \ / _` | '_ \ / _` |
